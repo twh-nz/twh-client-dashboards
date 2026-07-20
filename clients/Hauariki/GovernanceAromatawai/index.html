@@ -655,7 +655,6 @@
   body.dqc-editing .dqc-mirror{ background:rgba(47,111,143,.045); border-left:2px solid rgba(47,111,143,.30); padding-left:6px; border-radius:2px; }
   body.dqc-editing .dqc-mirror:hover{ background:rgba(47,111,143,.09); }
 
-  /* comments (V3): per-card bubbles + floating comment panel (edit mode only) */
   body.dqc-editing .rec-card, body.dqc-editing .rec-field, body.dqc-editing .dimension-card, body.dqc-editing .findings-group, body.dqc-editing .all-rf-row, body.dqc-editing .red-flag, body.dqc-editing .doc-review-card, body.dqc-editing .personality-card, body.dqc-editing .section-card{ position:relative; }
   .dqc-bubble{ display:none; position:absolute; top:8px; right:34px; z-index:60; min-width:26px; height:26px; align-items:center; justify-content:center; gap:2px; border-radius:999px; border:1px solid #D9CDB3; background:#fff; cursor:pointer; font-size:13px; line-height:1; opacity:.65; transition:opacity .12s; padding:0 5px; }
   body.dqc-editing .dqc-bubble{ display:inline-flex; }
@@ -689,11 +688,9 @@
   <div class="dqc-spacer"></div>
   <span class="dqc-pill" id="dqc-edit-count-pill"><b id="dqc-edit-count">0</b> edits · <b id="dqc-comment-count">0</b> comments</span>
   <button class="dqc-btn dqc-btn-ghost" id="dqc-general-comment" type="button">General comment</button>
-  <button class="dqc-btn dqc-btn-edit" id="dqc-toggle" type="button">Enter edit mode</button>
   <button class="dqc-btn dqc-btn-save" id="dqc-open-save" type="button" disabled>Finish &amp; save…</button>
 </div>
 <div id="dqc-hint" data-tooling>
-  <b>Edit mode is on.</b> Click any outlined text to rewrite it. Click a traffic-light chip to change its rating. Use the 💬 bubbles to leave a comment on any card — comments travel with the change list, not the dashboard. Generated numbers, structural labels, and computed counts are locked because changing them would be silently overwritten on the next regeneration.
 </div>
 
 <div class="main-content"><div class="print-toolbar no-print"><button class="print-btn" onclick="printDashboard('full')" title="Print or save full dashboard as PDF"><span class="print-icon">&#128424;</span> Print full dashboard</button><button class="print-btn" onclick="printDashboard('summary')" title="Print or save executive summary as PDF"><span class="print-icon">&#128424;</span> Print executive summary</button></div>
@@ -1665,7 +1662,6 @@
       <button class="dqc-btn dqc-btn-ghost" id="dqc-close-save" type="button">Back to review</button>
     </div>
     <div class="dqc-aside">
-      The <b>edited HTML</b> is for clients whose dashboard is hosted as a file. The <b>change list</b> maps each edit to its spec field, for clients whose dashboard is regenerated from the YAML. Taking both covers either path.
     </div>
   </div>
 </div>
@@ -1746,18 +1742,6 @@
     return n;
   }
 
-  // Toggle edit mode
-  const toggle = document.getElementById('dqc-toggle');
-  toggle.addEventListener('click', () => {
-    const on = body.classList.toggle('dqc-editing');
-    toggle.textContent = on ? 'Exit edit mode' : 'Enter edit mode';
-    toggle.classList.toggle('on', on);
-    editables.forEach(el => {
-      if(on) el.setAttribute('contenteditable', 'true');
-      else el.removeAttribute('contenteditable');
-    });
-  });
-  editables.forEach(el => el.addEventListener('input', function(){ mirrorSync(el); refreshFlags(); }));
 
   // Cycle constrained controls
   statuses.forEach(el => {
@@ -2055,11 +2039,6 @@
   refreshFlags();
 })();
 
-/* ---- click-guard (make-editable) -------------------------------------------
-   A click inside expanded content must NOT collapse the box. The recommendation
-   card carries its collapse onclick on the whole card, so a click on its body
-   bubbles up and collapses it — fatal when reading or editing. In EDIT MODE only, this stops the bubble inside editable regions/bodies so a
-   click to edit doesn't collapse the box. VIEW mode keeps click-to-collapse. */
 document.querySelectorAll('.rec-card-detail,.dim-body,.crf-body,.doc-review-body,.pers-collapse-body,.inline-docs-body,[data-edit],[data-ref],.dqc-mirror').forEach(function(__el){
   __el.addEventListener('click', function(__e){ if(document.body.classList.contains('dqc-editing')) __e.stopPropagation(); }, false);
 });
