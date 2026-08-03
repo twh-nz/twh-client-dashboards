@@ -1,1 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Te Ore Ore Marae — Governance Aromatawai · Prep Dashboard V1</title>
+<style>
+  :root{
+    --bg:#f6f1e7; --ink:#2c2622; --muted:#6f655b; --line:#e2d8c8;
+    --card:#fffdf8; --clay:#f0e6d6; --clay-line:#d8c7ac;
+    --green:#3f7d57; --green-bg:#e8f1ea;
+    --amber:#c08a2d; --amber-bg:#f7eed9;
+    --red:#b4533f; --red-bg:#f6e4df;
+    --grey:#8a8178; --grey-bg:#ece7df;
+    --teal:#2f6f73; --plum:#7a5a78;
+    --shadow:0 1px 3px rgba(60,45,30,.08),0 4px 18px rgba(60,45,30,.05);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;}
+  .wrap{max-width:1040px;margin:0 auto;padding:28px 22px 80px;}
+  header.top{padding:6px 0 14px;}
+  .kicker{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+  h1{font-size:1.9rem;margin:.18em 0 .1em;font-weight:700;}
+  .sub{color:var(--muted);font-size:1.02rem;margin:0;}
+  .interim{display:flex;gap:12px;align-items:flex-start;background:var(--clay);
+    border:1px solid var(--clay-line);border-radius:var(--radius);padding:14px 16px;margin:18px 0;}
+  .interim .badge{flex:0 0 auto;background:var(--amber);color:#fff;font-weight:700;font-size:.72rem;
+    letter-spacing:.06em;padding:5px 9px;border-radius:8px;text-transform:uppercase;margin-top:1px;}
+  .interim p{margin:0;font-size:.94rem;color:#5d5043;}
+  .lenses{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 26px;}
+  .lens{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);}
+  .lens .ico{font-size:1.15rem}
+  .lens h3{margin:.1em 0 .15em;font-size:.98rem;}
+  .lens .state{font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+  .lens.done .state{color:var(--green)}
+  .lens.pending .state{color:var(--amber)}
+  .lens p{margin:.3em 0 0;font-size:.86rem;color:var(--muted);}
+  section{margin:34px 0;}
+  h2.sec{font-size:1.3rem;border-bottom:2px solid var(--line);padding-bottom:8px;margin-bottom:6px;}
+  .sec-note{color:var(--muted);font-size:.92rem;margin:.2em 0 18px;}
+  .explainer{background:var(--clay);border:1px solid var(--clay-line);border-radius:var(--radius);
+    padding:18px 20px;margin:14px 0 8px;}
+  .explainer p{margin:.4em 0;font-size:.96rem;color:#544737}
+  .whakatauki{font-style:italic;color:#6a5c4a;border-left:3px solid var(--clay-line);padding-left:12px;margin-top:12px!important;}
+  /* 90-second script box */
+  .script{background:#eef3f3;border:1px solid #cfe0e0;border-left:5px solid var(--teal);border-radius:var(--radius);padding:18px 20px;margin:14px 0 8px;}
+  .script .lbl{font-size:.76rem;font-style:italic;font-weight:700;letter-spacing:.04em;color:var(--teal);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .script .lbl .mic{font-size:1.05rem;font-style:normal}
+  .script p{margin:.4em 0;font-size:.96rem;color:#3f5b5b;font-style:italic;}
+  /* documents reviewed */
+  .docs-list{list-style:none;margin:6px 0 0;padding:0;}
+  .docs-list li{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;margin:7px 0;font-size:.94rem;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .docs-list li.yes{border-left:5px solid var(--green);}
+  .docs-list li.yes .mk{color:var(--green);font-weight:700;}
+  .docs-list li.no{border-left:5px solid var(--red);color:#6f655b;}
+  .docs-list li.no .mk{color:var(--red);font-weight:700;}
+  .docs-list .mk{margin-right:4px;}
+  .docs-list .small{color:var(--muted);font-size:.85rem;}
+  .ddot{flex:0 0 auto;width:11px;height:11px;border-radius:50%;display:inline-block;}
+  .ddot.g{background:var(--green)}
+  .ddot.a{background:var(--amber)}
+  .ddot.r{background:var(--red)}
+  .verdict{font-style:italic;color:#5d5043;}
+  .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .tri .col{border-radius:var(--radius);padding:14px 16px;border:1px solid var(--line);}
+  .tri .g{background:var(--green-bg);border-color:#cfe3d5}
+  .tri .a{background:var(--amber-bg);border-color:#ecdcbb}
+  .tri .i{background:#eaf0f0;border-color:#cfe0e0}
+  .tri h4{margin:0 0 8px;font-size:.92rem;text-transform:uppercase;letter-spacing:.05em;}
+  .tri .g h4{color:var(--green)} .tri .a h4{color:var(--amber)} .tri .i h4{color:var(--teal)}
+  .tri ul{margin:0;padding-left:18px;} .tri li{font-size:.88rem;margin:.32em 0;}
+  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 6px;align-items:center;}
+  .tag{font-size:.72rem;font-weight:700;letter-spacing:.04em;padding:4px 9px;border-radius:20px;text-transform:uppercase;white-space:nowrap;}
+  .t-cert{background:#cfe6d6;color:#1f5538;border:1px solid #a9d0b6;}
+  .t-two{background:#dcebe0;color:#2c6244;border:1px solid #b9d6c2;}
+  .t-doc{background:#e3ecf3;color:#33597a;border:1px solid #c2d6e6;}
+  .t-survey{background:#efe6ef;color:#6a4868;border:1px solid #dac8d8;}
+  .keybox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:0 0 16px;font-size:.84rem;color:#5d5043;}
+  .keybox b{color:var(--ink)}
+  .keybox div{margin:.2em 0}
+  .rec{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    margin:12px 0;box-shadow:var(--shadow);overflow:hidden;}
+  .rec .head{display:flex;gap:14px;align-items:center;padding:15px 18px;cursor:pointer;}
+  .rec .num{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;}
+  .rec .ttl{flex:1;font-weight:600;font-size:1.03rem;}
+  .rec .tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+  .rec .chev{flex:0 0 auto;color:var(--muted);transition:transform .2s;font-size:.9rem;}
+  .rec.open .chev{transform:rotate(90deg);}
+  .rec .body{display:none;padding:0 18px 18px 62px;}
+  .rec.open .body{display:block;}
+  .rec .row{margin:10px 0;font-size:.9rem;}
+  .rec .row .lab{font-weight:700;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px;}
+  .rec .doc .lab{color:#33597a} .rec .survey .lab{color:#6a4868} .rec .iv .lab{color:var(--teal)}
+  .rec .iv{background:#eef3f3;border-radius:10px;padding:9px 12px;border:1px dashed #bcd2d2;}
+  .rec .start{background:var(--green-bg);border-radius:10px;padding:9px 12px;border:1px solid #cfe3d5;}
+  .rec .start .lab{color:var(--green)}
+  /* red flags */
+  .rf-note{background:#eef3f3;border:1px solid #cfe0e0;border-radius:10px;padding:10px 14px;font-size:.86rem;color:#3f5b5b;margin-bottom:16px;}
+  .rf-group{margin:18px 0;}
+  .rf-group h4{font-size:.95rem;margin:0 0 4px;display:flex;align-items:center;gap:8px;}
+  .rf-group .gsub{color:var(--muted);font-size:.84rem;margin:0 0 10px;}
+  .rf-sub{font-size:.8rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin:12px 0 4px;}
+  .rf{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--red);border-radius:10px;
+    padding:11px 14px;margin:8px 0;font-size:.9rem;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:12px;align-items:baseline;}
+  .rf .score{font-weight:700;color:var(--red);font-size:.82rem;white-space:nowrap;}
+  .rf.ms{border-left-color:var(--amber);}
+  .rf.la{border-left-color:var(--plum);}
+  .rf.doc{border-left-color:#33597a;}
+  .rf .cell{font-family:"Consolas",monospace;font-size:.74rem;color:var(--muted);}
+  /* dimensions */
+  .dim{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;box-shadow:var(--shadow);overflow:hidden;}
+  .dim .head{display:flex;gap:14px;align-items:center;padding:15px 18px;cursor:pointer;}
+  .dot{flex:0 0 auto;width:13px;height:13px;border-radius:50%;}
+  .dot.green{background:var(--green)} .dot.amber{background:var(--amber)} .dot.grey{background:var(--grey)}
+  .dot.red{background:var(--red)}
+  .dot.likely{background:repeating-linear-gradient(45deg,var(--red) 0 3px,#f6e4df 3px 5px);border:1px solid var(--red);}
+  .dim .names{flex:1;}
+  .dim .te{font-weight:700;font-size:1.05rem;letter-spacing:.02em;}
+  .dim .en{color:var(--muted);font-size:.86rem;font-style:italic;}
+  .dim .oneliner{flex:2;color:#5d5043;font-size:.9rem;text-align:right;}
+  .pri{background:var(--amber);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.05em;
+    padding:3px 7px;border-radius:6px;text-transform:uppercase;margin-left:8px;}
+  .dim .chev{color:var(--muted);transition:transform .2s;}
+  .dim.open .chev{transform:rotate(90deg);}
+  .dim .body{display:none;padding:4px 18px 20px;}
+  .dim.open .body{display:block;}
+  .strengthline{background:var(--green-bg);border:1px solid #cfe3d5;border-radius:10px;padding:10px 13px;margin:8px 0 14px;font-size:.92rem;}
+  .strengthline b{color:var(--green)}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .findbox{border-radius:10px;padding:11px 14px;font-size:.88rem;}
+  .findbox.doc{background:#eef3f8;border:1px solid #d3e1ee;}
+  .findbox.survey{background:#f4eef4;border:1px solid #e3d3e2;}
+  .findbox h5{margin:0 0 6px;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;}
+  .findbox.doc h5{color:#33597a} .findbox.survey h5{color:#6a4868}
+  .findbox ul{margin:0;padding-left:17px} .findbox li{margin:.4em 0}
+  .findbox .red{color:var(--red);font-weight:600;}
+  .findbox .likely{color:var(--red);font-style:italic;}
+  .ivbox{margin-top:13px;background:#eef3f3;border:1px dashed #bcd2d2;border-radius:10px;padding:11px 14px;}
+  .ivbox h5{margin:0 0 6px;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--teal)}
+  .ivbox ul{margin:0;padding-left:17px;font-size:.88rem} .ivbox li{margin:.28em 0;color:#3f5b5b}
+  .swatch{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+  .sg{background:var(--green)} .sa{background:var(--amber)} .sgr{background:var(--grey)}
+  .sr{background:var(--red)} .sl{background:repeating-linear-gradient(45deg,var(--red) 0 2px,#f6e4df 2px 4px);border:1px solid var(--red)}
+  .persona{background:#eef3f3;border:1px solid #cfe0e0;border-radius:var(--radius);padding:16px 18px;}
+  .persona h4{margin:0 0 6px;color:var(--teal);}
+  .persona p{margin:.3em 0;font-size:.9rem;color:#3f5b5b;}
+  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.85rem;}
+  .pendcard{background:#eef3f3;border:1px solid #cfe0e0;border-radius:var(--radius);padding:16px 18px;margin:10px 0;}
+  .pendcard h4{margin:0 0 6px;color:var(--teal);}
+  .conf{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--red);font-weight:700;}
+  @media(max-width:760px){.lenses,.tri,.twocol{grid-template-columns:1fr}.rec .body{padding-left:18px}.dim .oneliner{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
 
+  <header class="top">
+    <div class="kicker">Te Whare Hukahuka · Governance Aromatawai</div>
+    <h1>Te Ore Ore Marae — Governance Health</h1>
+    <p class="sub">Prep Dashboard · V1 · facilitator working view, for interview preparation · May 2026</p>
+  </header>
+
+  <div class="interim">
+    <span class="badge">Prep · Interim</span>
+    <p><b>This is the prep dashboard — a two-of-three-lens view, built for the facilitator, not the board.</b> It draws together the document reviews and the trustee survey to orient the facilitator before the kōrero. The interview lens is still to come; nothing here is a settled conclusion. The next products are the <b>draft</b> dashboard (after interviews) and the <b>client</b> dashboard (final, board-facing). Names are retained because this is an internal working view.</p>
+  </div>
+
+  <div class="lenses">
+    <div class="lens done"><span class="ico">📄</span><h3>Documents</h3><div class="state">✓ Reviewed</div><p>Three reviewed — Trust Charter, Agendas &amp; Minutes (Jun–Sep 2025), and the Policy Library read as a governance-manual proxy.</p></div>
+    <div class="lens done"><span class="ico">📊</span><h3>Survey</h3><div class="state">✓ Analysed</div><p>Tirohanga — 5 respondents (3 trustees, 1 Chair, 1 ad-hoc admin support), 27 scored items + free text. All five converge low (1.63–2.23).</p></div>
+    <div class="lens pending"><span class="ico">🗣️</span><h3>Interviews</h3><div class="state">⏳ Pending</div><p>V1 guide ready. All five Tirohanga respondents recommended for kōrero (Piriniha &amp; Belinda Essential; Dany, Charmaine, Robin High Value).</p></div>
+  </div>
+
+  <section>
+    <div class="script">
+      <div class="lbl"><span class="mic">🎤</span> Facilitator script — read aloud at interview open (~90 seconds)</div>
+      <p>"Thank you for the 3 documents — Trust Charter, agendas and minutes, the policy library — and the 5 survey responses you've shared. We want to start by naming what's strong. Your Charter is culturally grounded, most core elements clearly in place. The kaupapa heart is real — 'meetings focus on the needs and priorities of our kaupapa' is your highest-scored survey item, and whānau-and-community connection is your strongest area overall. The hui is alive too — decisions land, the Chair tables real choices, and the Pou table is a stronger role-clarity foundation than most marae start with."</p>
+      <p>"What the data is asking for is the governance machinery underneath the manaaki — strategy made visible, a rhythm trustees can rely on, the operational fires (tax debt, returns, treasurer gap, asset safety) sorted, and a tikanga-grounded path through disagreement. What we're hoping to learn today is what those gaps look like from inside the room, where the load could be more fairly carried, and what would help most over the next year."</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="explainer">
+      <p><b>The strength to build on.</b> Te Ore Ore is a working marae with a strong founding Charter, a kaupapa heart that is still beating, and a Chair-led hui where real decisions are tabled and followed through. The kaupapa-focus item ("meetings focus on the needs and priorities of our kaupapa") is the highest-scored item in the whole survey, and whānau-and-community connection is the strongest dimension. The Pou (portfolio) document already gives the board more role-clarity scaffolding than most marae start with.</p>
+      <p><b>The shape of the work.</b> Across both lenses, the same picture comes through: the kaupapa is loved and the discussions are happening — what is thin is the <i>governance machinery</i> underneath, the layer that lets trustees see strategy, finance, risk and accountability on paper rather than holding it all in the Chair's head. The picture is also unusually consistent — all five survey respondents converge low (personal means 1.63–2.23), with 19 of 27 scored items below the 2.5 red-flag line. When five people see the same picture, the gaps are real, not contested.</p>
+      <p class="whakatauki">Gaps here are read as opportunities, not deficiencies. Some live operational fires (tax debt, overdue GST/charities returns, treasurer gap, end-of-life buildings) need attention now and are surfaced as risks; the structural fixes are paced for a board with no paid staff.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Documents reviewed</h2>
+    <p class="sec-note">✓ reviewed (with a traffic-light rating) &nbsp;·&nbsp; ✗ not yet provided. The last two were not provided to this lens — noted as not-yet-built, never marked as poor.</p>
+    <ul class="docs-list">
+      <li class="yes"><span class="mk">✓</span> <span class="ddot g"></span> <b>Trust Charter / Te Kawenata (1E2 Māori Reservation Marae)</b> &nbsp;<span class="verdict">— A strong founding document; 17 core elements clearly in place. Modern controls (COI, indemnity, dispute resolution, transaction thresholds) are the addition needed.</span></li>
+      <li class="yes"><span class="mk">✓</span> <span class="ddot a"></span> <b>Agendas &amp; Minutes — June to September 2025</b> &nbsp;<span class="small">(reviewed as board-pack proxy)</span> <span class="verdict">— A working board pack, not yet a decision-ready board pack: strategy, finance, risk and resolutions are kōrero-held rather than circulated.</span></li>
+      <li class="yes"><span class="mk">✓</span> <span class="ddot r"></span> <b>Policy Library</b> &nbsp;<span class="small">(five standalone policies; reviewed as governance-manual proxy)</span> <span class="verdict">— The Pou (portfolio) document is a real strength; only 1 of 17 manual items is complete (Administration Pou = Board Secretary). 7 partial, 9 not evident.</span></li>
+      <li class="no"><span class="mk">✗</span> <b>Strategic Plan</b> <span class="small">— not provided / not yet sighted by trustees</span></li>
+      <li class="no"><span class="mk">✗</span> <b>Annual Budget</b> <span class="small">— not yet provided</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="sec">Snapshot</h2>
+    <p class="sec-note">Strengths to hold, areas to build, and the questions only the interviews can answer.</p>
+    <div class="tri">
+      <div class="col g">
+        <h4>✓ Strengths to hold</h4>
+        <ul>
+          <li>An exceptionally strong founding Charter — 17 core elements clearly in place, te ao Māori framing, collective decision-making.</li>
+          <li>The kaupapa heart is intact — "meetings focus on the needs and priorities of our kaupapa" is the highest-scored item in the survey (3.40 / 5).</li>
+          <li>Whānau and community connection is the strongest dimension (Mahau 2.48) — hosting kaupapa 3.00, pathways for whānau 2.80.</li>
+          <li>A working board pack in motion — Chair tables a wide range of matters, follows decisions through, brings real choices into the hui.</li>
+          <li>The Pou (portfolio) document is a stronger role-clarity foundation than most marae start with; the Administration Pou row already functions as a complete Board Secretary description.</li>
+        </ul>
+      </div>
+      <div class="col a">
+        <h4>↗ Areas to build</h4>
+        <ul>
+          <li>Strategy is invisible — no agreed priorities, no reporting structure to see progress (the lowest cluster in the survey).</li>
+          <li>The governance machinery is unwritten — risks, financials, options, resolutions are held by the Chair rather than circulated as papers before each hui.</li>
+          <li>Real operational fires are burning right now — tax debt, overdue GST and charities returns, treasurer resigned, kauta and wharepaku end-of-life.</li>
+          <li>The governance / operations line is unwritten and the Chair is carrying the load — "delegation falls on deaf ears", "Chair in charge, board not aware of actions taken or not taken".</li>
+          <li>Simple controls (conflicts of interest, financial delegations, trustee protections, a tikanga way through disagreement) are not written down anywhere.</li>
+        </ul>
+      </div>
+      <div class="col i">
+        <h4>🗣 To surface in interviews</h4>
+        <ul>
+          <li>The 5-of-~9 trustee response rate — what is happening with attendance, quorum, and the wider board (and who hasn't engaged with the Tirohanga).</li>
+          <li>The Chair-and-daughter dynamic (Piriniha &amp; Belinda) — where the load lands and where the frustration sits.</li>
+          <li>What "a fire dumpster waiting to explode" and "delegation falls on deaf ears" look like in the room — and what a tikanga-grounded path through them would look like.</li>
+          <li>The relationship between the Marae Reservation Trust and the separate Charitable Trust — only Dany can clarify this.</li>
+          <li>Whether the strong sub-board strategic content is being captured anywhere, or only in the Chair's head.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec">Priority recommendations — two-lens merge</h2>
+    <p class="sec-note">Built from the doc-review and survey Top 10s. Each carries a label for how many lenses can currently see it. The interview lens will confirm, sharpen, or re-rank these.</p>
+    <div class="legend">
+      <span class="tag t-cert">Two-source certain</span>
+      <span class="tag t-two">Two-source</span>
+      <span class="tag t-doc">Doc-only</span>
+      <span class="tag t-survey">Survey-only</span>
+    </div>
+    <div class="keybox">
+      <div><b>Two-source certain</b> — both the documents and the survey point the same way, strongly. The most reliable signals here.</div>
+      <div><b>Two-source</b> — both lenses touch it, but more as coverage than a strong, convergent signal.</div>
+      <div><b>Doc-only / Survey-only</b> — visible in just one lens; the card says why the other can't see it.</div>
+      <div style="margin-top:4px;color:var(--muted)">Nothing is fully triangulated yet — that needs the interviews.</div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">1</span><span class="ttl">Sort the immediate financial fundamentals — and pair them with a written financial frame</span>
+        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Trust Charter: financial procedures amber, substantial-transactions thresholds red. Board Pack: budget-vs-actuals red, financial information amber. Policy Library: Financial Management policy partial, no expenses policy. Three reviews surface this from different angles — the doc-lens keystone.</div>
+        <div class="row survey"><span class="lab">Survey signal</span>AK "reporting structures give a good sense of resources / progress" — 1.20 (the lowest item in the whole survey). Charmaine: "we owe the tax department a lot of money." Dany: "overdue charities and gst returns and penalties incurred", "find a Treasurer — last one resigned end of 2025". Robin: "lack of income from hireage not being paid; no new tenants in flats". AL scattered — trustees disagree on which financial controls are even in place.</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>Three named live items — the IRD position, the returns, the Treasurer gap. Where does each sit, who can carry it, and what would a one-page financial frame look like that the whole board sees before every hui? Priority kōrero with Dany, Piriniha, Belinda.</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Three short owned workstreams with first-hui-back reports: (a) returns and tax — name a path; (b) hireage and tenancies — restart the income; (c) one-page cashflow snapshot on every agenda. In parallel, draft a short Financial Management policy that names who can approve what.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">2</span><span class="ttl">Agree a few priorities — and a way to see progress on them</span>
+        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Board Pack: SMART goals on first page red; agenda items connect to strategic priorities amber; reports on progress against strategic goals amber. Policy Library: Strategic Direction &amp; Planning policy red (not evident). Trust Charter: intergenerational / legacy focus amber. The board is doing strategic work — Matua Flats, AGM, Healthy Homes — but the pack has no stated frame to hang it on.</div>
+        <div class="row survey"><span class="lab">Survey signal</span>The lowest cluster: AB "refined our strategy" 1.40, AD "making progress on strategic priorities" 1.40, Z "knows what we're aiming to achieve" 2.40. Five trustees, five different "priorities" in their own words. Belinda: "I have not sighted or read the Board's strategy." Piriniha (Chair): "Everything! beginning with attendance" — even the Chair cannot name a small handful first.</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>What stopped a strategy refresh? Which two or three priorities matter most for the next year, in each trustee's own words? Priority kōrero with Piriniha and Dany — and a structural question about whether strategy lives in the Charitable Trust as well as the Marae Reservation Trust.</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Run a short tikanga-grounded priority hui. Land on three to five priorities the board can name in one breath, written in trustees' own words. Pair each with one or two visible indicators that turn up on every agenda.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">3</span><span class="ttl">Bring risk to the board table — buildings, overdue compliance, and the wider register</span>
+        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Board Pack: risk register inclusion red — the hui turn over real risks (IRD penalty exposure, Healthy Homes compliance, building structure at the flats) but they are not tracked together anywhere. Policy Library: Risk Management policy partial — the 17-page Marae Emergency Plan covers natural-hazard risk substantively, but no board-level register exists.</div>
+        <div class="row survey"><span class="lab">Survey signal</span>X "robust process to manage risks" 1.60. V (uncomfortable risks): Financial 5/5, Reputational 5/5, Key client 5/5, Key person 5/5, Compliance 3/5, H&amp;S 3/5. Y (protections in place): only the Chair ticked any framework items; Robin "none of the above"; Belinda "I am embarrassed to say there are gaps to all the above". W: overdue charities/GST returns, IRD debt, kauta and wharepaku safety, key-person.</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>What does the Chair already track, and what does the board actually receive? Where is H&amp;S risk biggest on the whenua (Belinda + Robin)? Is the Marae Emergency Plan being used as the operational arm of a wider register, or is it parked?</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>A one-page board risk register with rows for the named risks (financial, compliance/returns, key-person, H&amp;S on the buildings, reputational). For each: brief description, owner, mitigation, status. Review at every hui as a five-minute standing item. The Emergency Plan stays as the operational arm for natural hazards.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">4</span><span class="ttl">Stabilise the operating rhythm — annual calendar, prework, minutes, action tracking</span>
+        <span class="tags"><span class="tag t-two">Two-source</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Board Pack: attachments labelled as "Decision" or "Information" amber; consistent structure across hui amber. The agendas are readable and the Chair tables work, but no annual calendar, no standing prework cycle, no living action register between hui.</div>
+        <div class="row survey"><span class="lab">Survey signal</span>Three of the lowest items: J "members arrive prepared" 1.40, T "milestones over the year" 1.40, U "track members' actions between hui" 1.40. P multi-select (the strongest convergence in the survey): "a stronger Annual Calendar" 5/5, "more skilled governance thinking" 5/5, "background information and an agenda before our meetings" 4/5, "a clear agenda of discussions and decisions" 4/5, "people being accountable to provide reporting back" 4/5.</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>What do trustees actually receive before a hui? What happens when actions don't get followed up between meetings? Priority kōrero with all five.</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Stand up one annual board calendar with the year's hui dates and recurring items (treasurer report, risk review, strategy check-in, AGM). One agenda template. Send agenda + papers a clear number of days before each hui. Carry one live actions register hui to hui — names, dates, status — and open every meeting with it.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">5</span><span class="ttl">Adopt a conflicts of interest policy and register</span>
+        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>The clearest red-red pair in the doc lens. Trust Charter: interest disclosures / conflicts of interest red. Policy Library: COI policy not evident. Charter notes such matters "may exist in separate policies or be informally practised", but no document evidences either.</div>
+        <div class="row survey"><span class="lab">Survey signal</span>S "we manage conflicts of interest effectively" 2.25 (n=4; one non-response). "Effective process for conflict resolution" widely flagged (separate but adjacent kaupapa). For a board where trustees also hold Pou (operational portfolios) and where family relationships overlap (Chair and daughter, Charitable Trust trustees), the absence is structurally significant.</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>How does a conflict get handled now? Especially given trustees also hold Pou roles and the Marae Reservation Trust / Charitable Trust dual structure (Dany's question).</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Adopt a one-page COI policy and a register. Each trustee declares material interests annually and at the point a new conflict arises. Table the register at the start of each hui and note declarations against the relevant agenda item. TWH can provide a template.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">6</span><span class="ttl">Name where governance ends and operations begin</span>
+        <span class="tags"><span class="tag t-two">Two-source</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Trust Charter: governance vs operations clarity amber. Policy Library: the Pou table is a substantive role-clarity start — but no overarching governance/operations line is written. Board Pack: agenda items mix governance kaupapa with operational decisions (booking system, building works, bookings logistics).</div>
+        <div class="row survey"><span class="lab">Survey signal</span>AG "differentiates governance-level mahi from operational mahi" 1.60. Dany ticks ten operational activities the board takes on (AH4). Belinda: "I cannot begin to answer this. The Chair and maybe 2 others are hands on due to no one else picking up the slack. Delegation falls on deaf ears." Dany: "Chair in charge, board not aware of actions taken or not taken." Dany's clean single-line statement (AE4): "Governance not operations."</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>Where does the line get crossed most? Which one or two operational things could lift off the board's plate (Booking Officer, a paid coordinator, kaitiaki by Pou)? With no CEO and the Chair as operating hub — what is realistic?</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Reserve the first portion of every hui for governance items only (strategy, risk, finance, policy, compliance). Time-box operational matters into a separate "ops update" block led by named Pou-holders. Where operational mahi must sit with trustees for now, name who carries it and report it back through the actions register rather than negotiating it live at the table.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">7</span><span class="ttl">Lift decision discipline — pre-drafted resolutions, thresholds, Chair/CE delegations</span>
+        <span class="tags"><span class="tag t-doc">Doc-only</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Three reviews independently flag a layer that turns kōrero into clean, defensible decisions. Board Pack: pre-drafted resolutions red, decisions required next meeting amber, attachments labelled "Decision/Information" amber. Trust Charter: decision-making thresholds amber (one explicit at 75% to amend; silent on everything else). Policy Library: Chairperson delegated authorities red, Manager/CE delegated authorities red.</div>
+        <div class="row survey"><span class="lab">Survey signal</span><i>The survey doesn't speak directly to resolution drafting or thresholds — this is a paper-discipline question, not a practice-feel one. Adjacent signals (Belinda: "everything is managed as a react and not planned"; "more skilled governance thinking" 5/5) hint at the same shape.</i></div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>Are decisions held in the Chair's head, or made visible in the room? What does the August agenda's "Decide on Agreement Title" pattern look like applied across the pack? What can the Chair decide independently between hui, and what needs full board?</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Add an "I / D" column to the agenda template — Information or Decision. Where it's a Decision, draft the resolution wording in one or two sentences below the item. Agree at a hui what the Chair can decide independently between meetings, and what dollar figure triggers full board sign-off. Capture both in a one-page delegations schedule.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">8</span><span class="ttl">Build the continuity layer — induction, succession, role clarity, governance capability</span>
+        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>The doc-lens continuity cluster — five reds and ambers together. Policy Library: board performance assessment red, succession planning red, induction red, skills gap matrix partial. Trust Charter: board performance review &amp; removal amber, Chair succession &amp; term limits amber. Charter caps service at six years (a healthy rotation rule) but no induction, no skills picture, no self-review rhythm.</div>
+        <div class="row survey"><span class="lab">Survey signal</span>R "governance structure effective at ensuring board mahi gets done" 1.60. H "mana / responsibilities of each role clearly set out" 2.80 (sd 1.64 — the widest spread in the survey; trustees disagree on whether roles are even clear). P multi-select: "more skilled governance thinking" 5/5 (unanimous); "more attendance / quorum" 4/5. Free text convergence: "trustees who will take responsibility" (Robin), "lack of understanding of their role as Trustees" (Robin), "fresh board members with drive, passion" (Belinda).</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>What would a new trustee want on their first day? Where is the wider board (the four-or-five not in the survey) — what would lift quorum and engagement? Priority kōrero with all five.</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>At the next hui, ask "what would we want a new trustee to be given on their first day?" — the answer is the start of an induction pack. Add a one-page Chair PD so there's something to hand on. Schedule an annual one-page board self-review. Use the Pou table's Skills column as the skills matrix and complete it.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">9</span><span class="ttl">Agree a tikanga-grounded way through disagreement</span>
+        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Trust Charter: tikanga-based dispute resolution red — the only Charter red about how the board behaves together rather than a controls item. On a board where trustees also hold operational Pou and where collective decision-making is a stated kaupapa, a written tikanga-grounded process is what protects relationships when disagreement is real.</div>
+        <div class="row survey"><span class="lab">Survey signal</span>O "disagreement, tension or misunderstandings managed effectively" 2.00. M "meetings respect the mana of people and our kaupapa" 1.80. "Effective process for conflict resolution when things get heated or tense" — 5/5 in P (unanimous). Belinda: "a fire dumpster waiting to explode. Unacceptable behaviours and lack of respect for our Tipuna and whenua." Piriniha: "they would be very disappointed with what is not happening at our marae". Robin's free text carries sharp, personal language that itself is part of the signal.</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>What does disagreement look like around this table now? What would a good tikanga-based approach look like here — and how does the Chair-and-daughter dynamic shape what's safe to raise? The most sensitive kōrero in the round (Belinda).</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Co-write a one-page meeting kawa with the board — what we expect of one another at the table, how we raise concerns, how we close them. Read it at the top of every hui for the first three months. Name a process for taking heated kōrero off-table (a pause, a walk, a follow-up hui) and use it.</div>
+      </div>
+    </div>
+
+    <div class="rec">
+      <div class="head"><span class="num">10</span><span class="ttl">Establish a single source of truth for governance documents (with the board manual as its home)</span>
+        <span class="tags"><span class="tag t-two">Two-source</span></span><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="row doc"><span class="lab">Document signal</span>Policy Library: five standalone operational policies with no overarching manual. 1 of 17 governance manual items complete (Administration Pou = Board Secretary), 7 partial, 9 not evident. Recommendation in the review: "open a new document with three sections — Compliance, Role Clarity, and Continuity — and drop the five existing policies in as appendices."</div>
+        <div class="row survey"><span class="lab">Survey signal</span>F "easy access to key governance and Trust documents" 1.40 (sd 0.89; 1,1,1,1,3 — only the Chair gave a 3). E "sufficient guidance from policies and constitutional documents" 1.60. "Document storage system" 4/5 in P. Belinda: "I have not sighted or read the Board's strategy." When a trustee hasn't seen the strategy, the strategy isn't operating — and a shared home is the precondition for the rest of the work to land.</div>
+        <div class="row iv"><span class="lab">Interviews will test →</span>Where do trustees go for documents now? What's already on a shared drive and what isn't? What would make a digital home actually used (phone access, simple structure, one keeper)?</div>
+        <div class="row start"><span class="lab">Resource-safe start</span>Stand up one shared digital folder all trustees can access from a phone. Move into it: the Charter, the policy library, the current strategy (or placeholder), agenda template, minutes from the last 12 months, the actions register, the risk register, financial statements, annual returns. Agree who keeps it tidy. In parallel, open a single "Te Ore Ore Marae — Board Manual" document with three sections (Compliance, Role Clarity, Continuity) and drop the five existing policies in as appendices.</div>
+      </div>
+    </div>
+
+    <p class="sec-note" style="margin-top:16px"><b>Held for synthesis:</b> <i>Survey-only:</i> Open the partnerships and external-support pipeline (AP 1.40 — partnerships are a known gap, but trustees haven't yet described them in detail), and build on the whānau-facing strength (the kaupapa heart — leads-with-strength rec). <i>Doc-only:</i> Add trustee protections and reimbursement (Charter reds on liability/indemnity and remuneration); finish the Pou document (Trustee Functionality, Exec Komiti, skills column); set a Charter review cycle that sweeps up the smaller ambers. All real, all lower-heat for this prep view — re-rank if the interview lens lifts any.</p>
+  </section>
+
+  <!-- RED FLAGS -->
+  <section>
+    <h2 class="sec">Red flags</h2>
+    <p class="sec-note">A facilitator-orientation list — what's flagging now, off the documents and survey only. Structured low-detail, like the client dashboard's red-flag list.</p>
+    <div class="rf-note"><b>Likely, pending interviews.</b> These are preliminary signals, not settled conclusions. They are drawn from two lenses; the interviews will confirm, soften, or add to them. By design, they are <i>not</i> carried forward as fixed into the draft or client dashboard. Survey red flags follow the standing method: an all-board item average below 2.5 / 5. <b>No bimodal masking effect</b> in this engagement — all five respondents converge low, so the full reds below are not lifted by a newcomer-optimist tail. That convergence is itself a finding: when five people see the same picture, the gaps are real, not contested.</div>
+
+    <div class="rf-group">
+      <h4><span class="swatch sr"></span> Survey red flags — scored items below 2.5 / 5 across all five respondents</h4>
+      <p class="gsub">The full list, grouped by where the weakness sits. Nineteen of 27 scored items sit below the red-flag line — and eight sit at or below 1.60.</p>
+
+      <div class="rf-sub">Strategy &amp; direction</div>
+      <div class="rf">The board hasn't refined its strategy into a few clear priorities. <span class="score">1.40</span></div>
+      <div class="rf">No real progress on strategic priorities / kaupapa. <span class="score">1.40</span></div>
+      <div class="rf">The board doesn't have a clear picture of what it's aiming to achieve. <span class="score">2.40</span></div>
+      <div class="rf">Necessary partnerships to achieve aspirations aren't in place. <span class="score">1.40</span></div>
+
+      <div class="rf-sub">Reporting, rhythm &amp; action tracking</div>
+      <div class="rf">Reporting structures don't give a good sense of resources and progress. <span class="score">1.20</span> <span class="small">(the lowest item in the survey)</span></div>
+      <div class="rf">Trustees aren't doing the mahi to arrive at meetings well prepared. <span class="score">1.40</span></div>
+      <div class="rf">The board isn't mapping key milestones over the year. <span class="score">1.40</span></div>
+      <div class="rf">Tracking trustees' actions between hui isn't working. <span class="score">1.40</span></div>
+
+      <div class="rf-sub">Documents &amp; policy guidance</div>
+      <div class="rf">Easy access to key governance and Trust documents isn't there. <span class="score">1.40</span></div>
+      <div class="rf">Policies and constitutional documents don't give sufficient guidance. <span class="score">1.60</span></div>
+
+      <div class="rf-sub">Structure, risk &amp; the governance/operations line</div>
+      <div class="rf">The governance structure isn't reliably getting the board's mahi done. <span class="score">1.60</span></div>
+      <div class="rf">No robust process to manage risks. <span class="score">1.60</span></div>
+      <div class="rf">Governance-level mahi isn't being differentiated from operational mahi. <span class="score">1.60</span></div>
+      <div class="rf">Relationships between the board and day-to-day operations aren't effective. <span class="score">2.00</span></div>
+
+      <div class="rf-sub">Tikanga, mana &amp; disagreement</div>
+      <div class="rf">Values, tikanga and kawa aren't integrated into how governance is done. <span class="score">1.80</span></div>
+      <div class="rf">Meetings aren't a place where the mana of people and kaupapa are respected. <span class="score">1.80</span></div>
+      <div class="rf">Disagreement, tension and misunderstandings aren't managed effectively. <span class="score">2.00</span></div>
+
+      <div class="rf-sub">Cohesion &amp; integrity</div>
+      <div class="rf">Meetings aren't progressing the board toward what it needs to achieve. <span class="score">2.20</span></div>
+      <div class="rf">Conflicts of interest aren't being managed effectively. <span class="score">2.25</span> <span class="small">(n=4; one non-response)</span></div>
+    </div>
+
+    <div class="rf-group">
+      <h4><span class="swatch sa"></span> Multi-select gaps</h4>
+      <p class="gsub">Tick-box answers that point to a gap — items where most or all of the five respondents say something is missing.</p>
+      <div class="rf ms"><span><b>Unanimous in the survey</b> — all five respondents flagged that <b>a stronger annual calendar, an effective process for conflict resolution, and more skilled governance thinking</b> are missing. <span class="cell">(P2–P6)</span></span></div>
+      <div class="rf ms"><span><b>Four of five respondents</b> flagged <b>background information / agenda before meetings, a document storage system, a clear agenda of discussions and decisions, more attendance for quorum, and people being accountable to provide reporting back</b> as missing. <span class="cell">(P2–P6)</span></span></div>
+      <div class="rf ms"><span><b>Y (protections in place)</b> — only the Chair (Piriniha) ticked any of the framework items. Robin wrote "None of the above"; Belinda wrote "I am embarrassed to say there are gaps to all the above". <span class="cell">(Y2–Y6)</span></span></div>
+      <div class="rf ms"><span><b>AL (financial processes)</b> — only 3 of 5 respondents ticked any items and they disagreed on which controls are in place. Two-signatory approval 2/3, annual financial statements 2/3, invoice/receipt keeping 1/3, clear delegations 1/3. Disagreement on what is in place is itself signal. <span class="cell">(AL2–AL6)</span></span></div>
+    </div>
+
+    <div class="rf-group">
+      <h4><span class="swatch" style="background:var(--plum)"></span> Lack of consensus (long-answer responses)</h4>
+      <p class="gsub">Free-text answers where trustees are working from materially different maps. Surfaced for the facilitator to probe — who differs, and where to look.</p>
+      <div class="rf la"><span><b>No shared set of priorities.</b> Asked for the board's top priorities, the five respondents named materially different things — Charmaine: "tax debt; upgrade marae and kaumātua flats"; Robin: "lack of income from hireage; no new tenants"; Dany: "pay outstanding bills, fix plumbing, sort overdue charities and GST returns, get a Treasurer"; Belinda: "N/A"; Piriniha (Chair): "designated office holders, quorum, make the difficult decisions". <span class="cell">(AC2–AC6)</span></span></div>
+      <div class="rf la"><span><b>Different reads on how the board is functioning.</b> Charmaine: "Poor — Very disjointed no communication"; Dany: "Chair in charge, board not aware of actions taken or not taken"; Belinda: "A fire dumpster waiting to explode. Unacceptable behaviours and lack of respect for our Tipuna and whenua"; Piriniha: "Looks are deceiving"; Robin: sharp and personal language that itself is part of the signal. <span class="cell">(AT2–AT6)</span></span></div>
+      <div class="rf la"><span><b>H "mana / responsibilities of each governance role clearly set out" — sd 1.64</b>, the widest spread in the survey. Scores 2, 5, 1, 4, 2 — trustees disagree on whether roles are even clearly set out. <span class="cell">(H2–H6)</span></span></div>
+    </div>
+
+    <div class="rf-group">
+      <h4><span class="swatch" style="background:#33597a"></span> Document red flags</h4>
+      <p class="gsub">Governance controls the founding document and policy library don't yet evidence. (Absence of an annual budget document or a current strategic plan is <i>not</i> flagged here — those are not-yet-built; they sit in the document list above.)</p>
+      <div class="rf doc"><span>No conflicts of interest policy or register in the Charter or anywhere in the policy library — matters more here because trustees also hold operational Pou and the Marae Reservation Trust sits alongside a separate Charitable Trust.</span></div>
+      <div class="rf doc"><span>No tikanga-based dispute-resolution process in the Charter.</span></div>
+      <div class="rf doc"><span>No trustee liability / indemnity provision in the Charter; no expenses / reimbursement policy in the library.</span></div>
+      <div class="rf doc"><span>No substantial-transactions thresholds in the Charter (what size of commitment needs higher approval).</span></div>
+      <div class="rf doc"><span>No Chair position description, no Chair delegated authorities, no Manager / CE delegations anywhere in the policy library.</span></div>
+      <div class="rf doc"><span>No risk register or board-level risk framework — the Marae Emergency Plan covers natural-hazard operational risk only.</span></div>
+      <div class="rf doc"><span>No board pack discipline — no SMART goals on page one, no budget-vs-actuals, no background papers / options for major decisions, no pre-drafted resolutions.</span></div>
+    </div>
+
+    <div class="rf-group">
+      <h4><span class="swatch" style="background:var(--red)"></span> Live, named time-bound risks (free-text, not Likert)</h4>
+      <p class="gsub">Concrete items the survey names directly — these belong in the risk register (Rec #3) and the financial workstream (Rec #1), not abstract dimension scores.</p>
+      <div class="rf"><span><b>Overdue charities and GST returns with penalties accruing</b> — Dany (W4). Compliance and reputational risk.</span></div>
+      <div class="rf"><span><b>Tax debt to IRD</b> — Charmaine (AC2). Financial and compliance risk.</span></div>
+      <div class="rf"><span><b>Treasurer gap</b> — Dany (AM4): "Find a Treasurer. Last one resigned end of 2025." Key-person and financial risk.</span></div>
+      <div class="rf"><span><b>Safety on the kauta and wharepaku; assets past end-of-life</b> — Belinda (W5). H&amp;S and reputational risk.</span></div>
+      <div class="rf"><span><b>Hireage not being paid; kaumātua flats untenanted</b> — Robin (AC3). Income / financial risk.</span></div>
+    </div>
+  </section>
+
+  <!-- DIMENSIONS -->
+  <section>
+    <h2 class="sec">By whare component</h2>
+    <p class="sec-note">Shown in whare order, top to bottom. Each dimension shows the strength first, then what each lens sees, then what the kōrero needs to test. Dots: <span class="swatch sg"></span>strong &nbsp; <span class="swatch sa"></span>building &nbsp; <span class="swatch sgr"></span>not yet built (not scored) &nbsp; <span class="swatch sr"></span>red (a full survey red sits here). No dashed-red (likely-red) dots in this engagement — there's no newcomer-optimist tail to mask anything; the five respondents converge low. Scores are the all-board mean across the 5 Tirohanga respondents.</p>
+
+    <div class="dim">
+      <div class="head"><span class="dot red"></span><div class="names"><span class="te">TŪĀPAPA</span> <span class="en">Strong Foundations</span></div>
+        <div class="oneliner">A strong Charter; contemporary controls and access to documents are the soft spot.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> The Trust Charter is the marae's strongest governance asset — culturally grounded, 17 core elements clearly in place, te ao Māori framing, collective decision-making, AGM cadence, sub-committees and amendment process all evidenced.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>Charter not-evident on: conflicts of interest, trustee liability / indemnity, remuneration, substantial-transactions thresholds, tikanga-based dispute resolution.</li>
+            <li>Charter partially specified on: definitions of key terms, trustees' powers, governance vs operations clarity, register of beneficiaries.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li><span class="red">Access to key governance and Trust documents is not yet in place — 1.40. Four of five respondents scored 1.</span></li>
+            <li><span class="red">Policies and constitutional documents don't yet give sufficient guidance — 1.60.</span></li>
+            <li><span class="red">Values, tikanga and kawa are not yet integrated into how governance is done — 1.80.</span></li>
+            <li>Belinda: "I have not sighted or read the Board's strategy."</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>How conflicts get handled now, with trustees also holding Pou roles and the dual Trust structure.</li><li>What a tikanga-based approach to disagreement looks like for this board.</li><li>Where trustees go for documents now — and what would make a digital home actually used.</li></ul></div>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="head"><span class="dot red"></span><div class="names"><span class="te">TEKOTEKO</span> <span class="en">Effective Leadership</span></div>
+        <div class="oneliner">Chair-led hui is real; the wider role clarity and capability layer is thin.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> Chair-led hui — Piriniha tables a wide range of matters, follows decisions through and brings real choices into the meeting. The Pou table is a stronger role-clarity foundation than most marae start with.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>Charter: Chair appointment evidenced; Chair succession &amp; term limits partial (six-year cap on service is a healthy rotation rule but no succession plan named).</li>
+            <li>Policy Library: Chairperson PD not evident; Chair delegated authorities not evident; Manager / CE delegated authorities not evident; board performance assessment not evident.</li>
+            <li>Policy Library: Pou (portfolio) responsibilities document is a substantive role-clarity start; Administration Pou row functions as a complete Board Secretary description.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li><span class="red">The governance structure isn't reliably getting the board's mahi done — 1.60.</span></li>
+            <li>Mana / responsibilities of each governance role — 2.80, but the widest spread in the survey (sd 1.64; scores 2,5,1,4,2). Trustees disagree on whether roles are even clearly set out.</li>
+            <li><span class="red">Conflicts of interest are not yet being managed effectively — 2.25 (n=4; one trustee didn't respond).</span></li>
+            <li>"More skilled governance thinking" — 5/5 unanimous in P.</li>
+            <li>Belinda: "delegation falls on deaf ears". Dany: "Chair in charge, board not aware of actions taken or not taken."</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>The Chair-carrying-the-board pattern — where the load could redistribute, and what a Chair PD plus a delegations schedule would unlock.</li><li>The wider board — who is not in the survey (4-of-9 unresponded), and why.</li><li>What good governance training looks like for this board (TWH programme is the natural fit).</li></ul></div>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="head"><span class="dot red"></span><div class="names"><span class="te">POU TOKOMANAWA</span> <span class="en">Board Cohesion</span></div>
+        <div class="oneliner">Kaupapa focus is the highest-scored item; disagreement and tone are the soft spots.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> The kaupapa heart is intact — "meetings focus on advancing the needs and priorities of our kaupapa" (L) is the highest-scored item in the whole survey at 3.40. Even in fatigue, trustees come back to the kaupapa.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>Charter: tikanga-based dispute resolution not evident.</li>
+            <li>Board Pack: minutes carry good substance — Treasurer updates, builder quotes, draft Emergency Plan all surface, but as kōrero rather than papers.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li><span class="red">Trustees aren't yet doing the mahi to arrive at meetings well prepared — 1.40.</span></li>
+            <li><span class="red">Meetings aren't yet a place where the mana of people and kaupapa are respected — 1.80.</span></li>
+            <li><span class="red">Disagreement and tension aren't being managed effectively — 2.00. 5/5 multi-select on "conflict resolution".</span></li>
+            <li><span class="red">Meetings aren't progressing the board toward what it needs to achieve — 2.20.</span></li>
+            <li>Meetings focus on advancing kaupapa — 3.40 <b>(the highest item in the survey)</b>.</li>
+            <li>Belinda: "a fire dumpster waiting to explode". Piriniha: "they would be very disappointed with what is not happening at our marae".</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What disagreement looks like around this table now — and how the Chair-and-daughter dynamic shapes what's safe to raise.</li><li>What a tikanga-grounded path through disagreement would look like here.</li><li>How the kaupapa focus survives when the rest of the meeting feels heavy.</li></ul></div>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="head"><span class="dot red"></span><div class="names"><span class="te">POU TŪHONO</span> <span class="en">Governance Systems</span><span class="pri">Priority</span></div>
+        <div class="oneliner">Agenda fundamentals work; the structural layer (annual calendar, prework, actions) doesn't yet.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> The agendas are readable and the minutes follow the items reasonably well — a working board pack in motion. The Chair tables real choices, with options and costings.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>Board Pack: no risk register; no budget-vs-actuals; no background papers / options / recommendations for major decisions; no pre-drafted resolutions; no policy review schedule.</li>
+            <li>Board Pack: financial information amber; attachments labelled "Decision"/"Information" amber; consistent structure across hui amber.</li>
+            <li>Policy Library: no document storage system named anywhere.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li><span class="red">The board isn't mapping key milestones over the year — 1.40.</span></li>
+            <li><span class="red">Tracking members' actions between hui isn't working — 1.40.</span></li>
+            <li>Information needed to arrive prepared — 2.60 (just over the line).</li>
+            <li>"A stronger annual calendar" — 5/5 in P. "Document storage system" — 4/5.</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What trustees actually receive before a hui — money reports, a risk list, plan updates — versus handed out on the night.</li><li>What happens between hui when actions don't get followed up.</li><li>What a phone-accessible shared drive would actually contain.</li></ul></div>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="head"><span class="dot red"></span><div class="names"><span class="te">TĀHUHU</span> <span class="en">Strategic Direction</span><span class="pri">Priority</span></div>
+        <div class="oneliner">Strategy is invisible — no agreed priorities, no way to see progress.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> The strategic content is real — Matua Flats to Healthy Homes, IRD resolved, AGM and Charter, the booking system, "Marae development plan, both people and bricks and mortar" — all sit in the minutes. The kaupapa to hang it on is there too.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>No strategic plan provided to this lens; previous plan (if any) not yet sighted.</li>
+            <li>Board Pack: SMART goals on first page red; agenda items connect to strategic priorities amber; reports on progress against strategic goals amber.</li>
+            <li>Policy Library: Strategic Direction &amp; Planning policy not evident.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li><span class="red">Strategy hasn't been refined into a few clear priorities — 1.40.</span></li>
+            <li><span class="red">No real progress is being made on strategic priorities — 1.40.</span></li>
+            <li><span class="red">The board isn't clear on what it's aiming to achieve — 2.40.</span></li>
+            <li>Five trustees named five different "priorities" in their own words.</li>
+            <li>Belinda: "I have not sighted or read the Board's strategy." Piriniha (Chair): "Everything! beginning with attendance."</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What stopped a strategy refresh happening (or what happened to the existing plan, if there is one).</li><li>Which two or three priorities matter most for the next year, in each trustee's own words.</li><li>Whether strategy lives across both the Marae Reservation Trust and the Charitable Trust (Dany).</li></ul></div>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="head"><span class="dot red"></span><div class="names"><span class="te">MAIHI</span> <span class="en">Operational Performance</span><span class="pri">Priority</span></div>
+        <div class="oneliner">Delivery is real; reporting and the governance/operations line are the gaps — and live financial fires are burning.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> The board mobilises and delivers — renovations, bookings, grants, the Marae Emergency Plan was produced. The willingness is not in question; the carrying is uneven.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>Charter: governance vs operations clarity partial; financial procedures partial; substantial-transactions thresholds not evident.</li>
+            <li>Policy Library: Financial Management policy partial; no Manager / CE role described; Booking Officer named only in the Mobile Technology policy.</li>
+            <li>Board Pack: budget-vs-actuals red; financial information amber.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li><span class="red">Reporting structures don't give a good sense of resources and progress — 1.20 (the lowest item in the survey).</span></li>
+            <li><span class="red">Governance-level mahi isn't being differentiated from operational mahi — 1.60.</span></li>
+            <li><span class="red">Relationships between the board and day-to-day operations aren't yet effective — 2.00.</span></li>
+            <li>Mobilising the people needed to deliver — 2.60 (just over the line).</li>
+            <li>Live items named: tax debt, overdue charities &amp; GST returns, treasurer gap, hireage not paid, kaumātua flats untenanted, kauta and wharepaku end-of-life.</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What financial reporting actually reaches trustees (the Treasurer gap question).</li><li>Where the governing/doing line gets crossed most — and what could come off the board's plate.</li><li>The named operational fires — IRD, returns, hireage, asset safety — what's the path to a plan?</li></ul></div>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="head"><span class="dot red"></span><div class="names"><span class="te">POU TUARONGO</span> <span class="en">Future-proofed Governance</span></div>
+        <div class="oneliner">A real gap — no risk process, no induction, no succession layer.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> The Marae Emergency Plan is substantive (17 pages) on natural-hazard risk — a foundation to extend, not a start from scratch. Trustees are clear-eyed about specific risks: financial, reputational, key-person, key-client all 5/5.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>Charter: Chair succession &amp; term limits partial (six-year service cap, no succession plan); board performance review partial.</li>
+            <li>Policy Library: board performance assessment not evident; succession planning not evident; induction not evident; skills gap matrix partial (Pou table has the column, mostly blank).</li>
+            <li>No board-level risk register or framework. Emergency Plan covers operational arm of natural-hazard risk only.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li><span class="red">No robust process to manage risks — 1.60.</span></li>
+            <li>Risks that trustees say make them uncomfortable: Financial 5/5, Reputational 5/5, Key-client 5/5, Key-person 5/5, Compliance 3/5, H&amp;S 3/5.</li>
+            <li>Protections in place: only the Chair ticked any framework items. Robin: "none of the above". Belinda: "I am embarrassed to say there are gaps to all the above".</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What does the Chair already track that the wider board doesn't see — and how could that become a one-page register?</li><li>What would a new trustee want on their first day? (the start of an induction pack).</li><li>The wider board's engagement and quorum — what would lift it?</li></ul></div>
+      </div>
+    </div>
+
+    <div class="dim">
+      <div class="head"><span class="dot amber"></span><div class="names"><span class="te">MAHAU</span> <span class="en">External Relationships</span></div>
+        <div class="oneliner">The board's strongest area — but partnerships are quiet and inward flow is light.</div><span class="chev">▶</span></div>
+      <div class="body">
+        <div class="strengthline"><b>Strength:</b> The highest-scoring component (Mahau 2.48) — hosting kaupapa that strengthen whānau connection 3.00; pathways for whānau and community 2.80 (sd 0.84 — low variance, the most reliable strength in the survey). The kaupapa heart is intact.</div>
+        <div class="twocol">
+          <div class="findbox doc"><h5>📄 Documents see</h5><ul>
+            <li>Charter: engagement with affiliated groups / named stakeholders amber.</li>
+            <li>Policy Library: Facebook Policy is a substantive comms anchor; broader Media Statements &amp; Communications policy is partial.</li>
+          </ul></div>
+          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
+            <li>Hosts kaupapa that strengthen whānau connection — 3.00.</li>
+            <li>Pathways for whānau to connect — 2.80.</li>
+            <li>Whānau aware of decisions and direction — 2.60.</li>
+            <li>Whānau inform our decisions — 2.60 (inward flow lighter than outward).</li>
+            <li><span class="red">Necessary partnerships to achieve aspirations aren't yet in place — 1.40.</span></li>
+            <li>Vision convergence (AS): "wananga, wananga, wananga"; "a thriving hub fit for purpose"; "safe, warm, clean, full of whanau".</li>
+          </ul></div>
+        </div>
+        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What does the partnerships landscape actually look like — council, funders, sector partners?</li><li>How is the Marae Reservation Trust's external face different from the Charitable Trust's?</li><li>What would lift the inward flow (whānau informing decisions) alongside the outward?</li></ul></div>
+      </div>
+    </div>
+
+  </section>
+
+  <section>
+    <h2 class="sec">What this view is waiting on</h2>
+    <div class="pendcard">
+      <h4>🗣 The interview lens</h4>
+      <p style="margin:.2em 0 0;font-size:.92rem;color:#3f5b5b">All five Tirohanga respondents are recommended for kōrero — Piriniha (Chair) and Belinda are Essential, Dany, Charmaine and Robin are High Value. When the interviews are done, the third Top 10 folds in, two-source items can become fully triangulated, the red flags get confirmed or softened, and a clearer picture of the wider board emerges — the four-or-five trustees who didn't take the Tirohanga. This becomes the <b>draft</b> dashboard, and then the board-facing <b>client</b> dashboard after de-attribution (names removed) for anything opinion-based. Structural facts (the Chair-and-daughter relationship, the dual Trust structure, the Pou roles) stay; characterisations of behaviour come off the page.</p>
+    </div>
+  </section>
+
+  <!-- PERSONALITY (gap-named) -->
+  <section>
+    <h2 class="sec">Personality profiles</h2>
+    <p class="sec-note">A standalone view of the board's working styles, when personality-type data has been gathered. Sits at the foot of the dashboard so it doesn't get folded into board cohesion. Carries through unchanged into the draft and client dashboards.</p>
+    <div class="persona">
+      <h4>Whaiaro &nbsp;|&nbsp; Personality Profiles — not gathered for this engagement</h4>
+      <p>The Tirohanga survey for Te Ore Ore did not include a personality-type instrument. The second tab of the survey workbook ("Copy of SURVEY RESPONSES TO USE") carries MBTI profiles for eight people, but those respondents are <b>from another marae engagement</b> and do not belong to Te Ore Ore — they have been excluded from this analysis. The Te Ore Ore inputs (3 documents + 5 Tirohanga responses) carry no personality data.</p>
+      <p>This section is therefore left empty by design. If MBTI or another personality instrument is run with the wider board as part of a follow-on engagement, the section can be populated then — clusters, dichotomy splits, role-holder placement, and a synthesis paragraph tying composition to the governance findings.</p>
+      <p style="margin-top:8px"><b>Implication for this prep round:</b> read the interview kōrero with extra attention to working-style cues (decisive vs reflective; relational vs structural; options-open vs closure-seeking) — the interviews will be the only window into how each trustee operates in the room until a personality instrument is run.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><span class="conf">Confidential · Prep dashboard · facilitator working view</span></p>
+    <p>Te Whare Hukahuka — Governance Aromatawai · Te Ore Ore Marae · Prep Dashboard V1, May 2026. Built from three document reviews (Trust Charter, Agendas &amp; Minutes Jun–Sep 2025, Policy Library) and the Tirohanga survey (5 respondents — 3 trustees, 1 Chair, 1 ad-hoc admin / booking support). All five respondents converge low (personal means 1.63–2.23) with no newcomer-optimist tail — the all-board mean is the established read. Nineteen of 27 scored items sit below the 2.5 red-flag line. Red flags are likely, drawn from two lenses, and are not carried forward as fixed into the draft or client dashboard. Recommendations are resource-safe for a volunteer board with no paid staff. Some artifacts were not provided to this lens (strategic plan, annual budget) and are shown as not-yet-provided, never rated. The board operates two governance entities (Marae Reservation Trust and a separate Charitable Trust) — a structural fact to surface in the kōrero. No personality data was gathered for this engagement; the MBTI tab in the survey workbook belongs to a different marae and has been excluded.</p>
+  </footer>
+
+</div>
+<script>
+  document.querySelectorAll('.rec .head, .dim .head').forEach(function
