@@ -3,636 +3,1554 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hurunui o Rangi Marae – Governance Aromatawai · Prep Dashboard V1</title>
+<title>Hurunui o Rangi Marae – Governance Aromatawai · Prep Dashboard V2 — editable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f1e7; --ink:#2c2622; --muted:#6f655b; --line:#e2d8c8;
-    --card:#fffdf8; --clay:#f0e6d6; --clay-line:#d8c7ac;
-    --green:#3f7d57; --green-bg:#e8f1ea;
-    --amber:#c08a2d; --amber-bg:#f7eed9;
-    --red:#b4533f; --red-bg:#f6e4df;
-    --grey:#8a8178; --grey-bg:#ece7df;
-    --teal:#2f6f73; --plum:#7a5a78;
-    --purple:#7a3fd1; --purple-bg:#f0e8fb;
-    --shadow:0 1px 3px rgba(60,45,30,.08),0 4px 18px rgba(60,45,30,.05);
-    --radius:14px;
+    --maroon:#5C1A1A; --maroon-mid:#A63547; --gold:#C4962C; --clay:#AF6722;
+    --body-brown:#613420; --taupe:#A97056; --cream:#EFECE4; --sand:#E0D5C8;
+    --green:#1F7135; --amber:#D4900A; --red:#FF0000;
+    --green-bg:#EAF2EC; --amber-bg:#F9F0DC; --red-bg:#FBE9E7; --grey:#8a8178; --grey-bg:#EBE6DE;
+    --card:#FFFFFF; --shadow:0 2px 8px rgba(0,0,0,.04); --radius:12px;
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.5;}
-  .wrap{max-width:1040px;margin:0 auto;padding:28px 22px 80px;}
-  header.top{padding:6px 0 14px;}
-  .kicker{font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;}
-  h1{font-size:1.9rem;margin:.18em 0 .1em;font-weight:700;}
-  .sub{color:var(--muted);font-size:1.02rem;margin:0;}
-  .interim{display:flex;gap:12px;align-items:flex-start;background:var(--clay);
-    border:1px solid var(--clay-line);border-radius:var(--radius);padding:14px 16px;margin:18px 0;}
-  .interim .badge{flex:0 0 auto;background:var(--amber);color:#fff;font-weight:700;font-size:.72rem;
-    letter-spacing:.06em;padding:5px 9px;border-radius:8px;text-transform:uppercase;margin-top:1px;}
-  .interim p{margin:0;font-size:.94rem;color:#5d5043;}
-  .lenses{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 26px;}
-  .lens{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);}
-  .lens .ico{font-size:1.15rem}
-  .lens h3{margin:.1em 0 .15em;font-size:.98rem;}
-  .lens .state{font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
-  .lens.done .state{color:var(--green)}
-  .lens.pending .state{color:var(--amber)}
-  .lens p{margin:.3em 0 0;font-size:.86rem;color:var(--muted);}
-  section{margin:34px 0;}
-  h2.sec{font-size:1.3rem;border-bottom:2px solid var(--line);padding-bottom:8px;margin-bottom:6px;}
-  .sec-note{color:var(--muted);font-size:.92rem;margin:.2em 0 18px;}
-  .explainer{background:var(--clay);border:1px solid var(--clay-line);border-radius:var(--radius);
-    padding:18px 20px;margin:14px 0 8px;}
-  .explainer p{margin:.4em 0;font-size:.96rem;color:#544737}
-  .whakatauki{font-style:italic;color:#6a5c4a;border-left:3px solid var(--clay-line);padding-left:12px;margin-top:12px!important;}
-  /* documents reviewed */
-  .docs-list{list-style:none;margin:6px 0 0;padding:0;}
-  .docs-list li{background:var(--card);border:1px solid var(--line);border-radius:10px;
-    padding:10px 14px;margin:7px 0;font-size:.94rem;box-shadow:var(--shadow);}
-  .docs-list li.yes{border-left:5px solid var(--green);}
-  .docs-list li.yes .mk{color:var(--green);font-weight:700;}
-  .docs-list li.no{border-left:5px solid var(--red);color:#6f655b;}
-  .docs-list li.no .mk{color:var(--red);font-weight:700;}
-  .docs-list .mk{margin-right:8px;}
-  .docs-list .small{color:var(--muted);font-size:.85rem;}
-  .tri{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-  .tri .col{border-radius:var(--radius);padding:14px 16px;border:1px solid var(--line);}
-  .tri .g{background:var(--green-bg);border-color:#cfe3d5}
-  .tri .a{background:var(--amber-bg);border-color:#ecdcbb}
-  .tri .i{background:#eaf0f0;border-color:#cfe0e0}
-  .tri h4{margin:0 0 8px;font-size:.92rem;text-transform:uppercase;letter-spacing:.05em;}
-  .tri .g h4{color:var(--green)} .tri .a h4{color:var(--amber)} .tri .i h4{color:var(--teal)}
-  .tri ul{margin:0;padding-left:18px;} .tri li{font-size:.88rem;margin:.32em 0;}
-  .legend{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 6px;align-items:center;}
-  .tag{font-size:.72rem;font-weight:700;letter-spacing:.04em;padding:4px 9px;border-radius:20px;text-transform:uppercase;white-space:nowrap;}
-  .t-cert{background:#cfe6d6;color:#1f5538;border:1px solid #a9d0b6;}
-  .t-two{background:#dcebe0;color:#2c6244;border:1px solid #b9d6c2;}
-  .t-doc{background:#e3ecf3;color:#33597a;border:1px solid #c2d6e6;}
-  .t-survey{background:#efe6ef;color:#6a4868;border:1px solid #dac8d8;}
-  .t-purple{background:#e7dcf7;color:#4a2a80;border:1px solid #c9b3ec;}
-  .keybox{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:0 0 16px;font-size:.84rem;color:#5d5043;}
-  .keybox b{color:var(--ink)}
-  .keybox div{margin:.2em 0}
-  .rec{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-    margin:12px 0;box-shadow:var(--shadow);overflow:hidden;}
-  .rec .head{display:flex;gap:14px;align-items:center;padding:15px 18px;cursor:pointer;}
-  .rec .num{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;
-    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.95rem;}
-  .rec .ttl{flex:1;font-weight:600;font-size:1.03rem;}
-  .rec .tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
-  .rec .chev{flex:0 0 auto;color:var(--muted);transition:transform .2s;font-size:.9rem;}
-  .rec.open .chev{transform:rotate(90deg);}
-  .rec .body{display:none;padding:0 18px 18px 62px;}
-  .rec.open .body{display:block;}
-  .rec .row{margin:10px 0;font-size:.9rem;}
-  .rec .row .lab{font-weight:700;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px;}
-  .rec .doc .lab{color:#33597a} .rec .survey .lab{color:#6a4868} .rec .iv .lab{color:var(--teal)}
-  .rec .iv{background:#eef3f3;border-radius:10px;padding:9px 12px;border:1px dashed #bcd2d2;}
-  .rec .start{background:var(--green-bg);border-radius:10px;padding:9px 12px;border:1px solid #cfe3d5;}
-  .rec .start .lab{color:var(--green)}
-  /* red flags */
-  .rf-note{background:#eef3f3;border:1px solid #cfe0e0;border-radius:10px;padding:10px 14px;font-size:.86rem;color:#3f5b5b;margin-bottom:16px;}
-  .rf-group{margin:18px 0;}
-  .rf-group h4{font-size:.95rem;margin:0 0 4px;display:flex;align-items:center;gap:8px;}
-  .rf-group .gsub{color:var(--muted);font-size:.84rem;margin:0 0 10px;}
-  .rf-sub{font-size:.8rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin:12px 0 4px;}
-  .rf{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--red);border-radius:10px;
-    padding:11px 14px;margin:8px 0;font-size:.9rem;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:12px;align-items:baseline;}
-  .rf .score{font-weight:700;color:var(--red);font-size:.82rem;white-space:nowrap;}
-  .rf.likely{border-left:5px dashed var(--red);background:linear-gradient(90deg,#f6e4df 0 6px,var(--card) 6px);}
-  .rf.ms{border-left-color:var(--amber);}
-  .rf.la{border-left-color:var(--plum);}
-  .rf.doc{border-left-color:#33597a;}
-  .rf .cell{font-family:"Consolas",monospace;font-size:.74rem;color:var(--muted);}
-  .likelytag{display:inline-block;background:var(--red);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.05em;
-    padding:2px 6px;border-radius:5px;text-transform:uppercase;margin-right:6px;vertical-align:middle;}
-  /* dimensions */
-  .dim{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin:12px 0;box-shadow:var(--shadow);overflow:hidden;}
-  .dim .head{display:flex;gap:14px;align-items:center;padding:15px 18px;cursor:pointer;}
-  .dot{flex:0 0 auto;width:13px;height:13px;border-radius:50%;}
-  .dot.green{background:var(--green)} .dot.amber{background:var(--amber)} .dot.grey{background:var(--grey)}
-  .dot.red{background:var(--red)}
-  .dot.likely{background:repeating-linear-gradient(45deg,var(--red) 0 3px,#f6e4df 3px 5px);border:1px solid var(--red);}
-  .dot.purple{background:var(--purple);}
-  .dim .names{flex:1;}
-  .dim .te{font-weight:700;font-size:1.05rem;letter-spacing:.02em;}
-  .dim .en{color:var(--muted);font-size:.86rem;font-style:italic;}
-  .dim .oneliner{flex:2;color:#5d5043;font-size:.9rem;text-align:right;}
-  .pri{background:var(--amber);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.05em;
-    padding:3px 7px;border-radius:6px;text-transform:uppercase;margin-left:8px;}
-  .dim .chev{color:var(--muted);transition:transform .2s;}
-  .dim.open .chev{transform:rotate(90deg);}
-  .dim .body{display:none;padding:4px 18px 20px;}
-  .dim.open .body{display:block;}
-  .strengthline{background:var(--green-bg);border:1px solid #cfe3d5;border-radius:10px;padding:10px 13px;margin:8px 0 14px;font-size:.92rem;}
-  .strengthline b{color:var(--green)}
-  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .findbox{border-radius:10px;padding:11px 14px;font-size:.88rem;}
-  .findbox.doc{background:#eef3f8;border:1px solid #d3e1ee;}
-  .findbox.survey{background:#f4eef4;border:1px solid #e3d3e2;}
-  .findbox h5{margin:0 0 6px;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;}
-  .findbox.doc h5{color:#33597a} .findbox.survey h5{color:#6a4868}
-  .findbox ul{margin:0;padding-left:17px} .findbox li{margin:.4em 0}
-  .findbox .red{color:var(--red);font-weight:600;}
-  .findbox .likely{color:var(--red);font-style:italic;}
-  .ivbox{margin-top:13px;background:#eef3f3;border:1px dashed #bcd2d2;border-radius:10px;padding:11px 14px;}
-  .ivbox h5{margin:0 0 6px;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--teal)}
-  .ivbox ul{margin:0;padding-left:17px;font-size:.88rem} .ivbox li{margin:.28em 0;color:#3f5b5b}
-  .swatch{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
-  .sg{background:var(--green)} .sa{background:var(--amber)} .sgr{background:var(--grey)}
-  .sr{background:var(--red)} .sl{background:repeating-linear-gradient(45deg,var(--red) 0 2px,#f6e4df 2px 4px);border:1px solid var(--red)}
-  .sp{background:var(--purple)}
-  .purple-note{background:var(--purple-bg);border:1px solid #d9c8f2;border-left:4px solid var(--purple);border-radius:10px;padding:10px 14px;margin:0 18px 12px;font-size:.86rem;color:#3d2a5e;}
-  .purple-note div{margin:.3em 0;}
-  .purple-note .pl{font-weight:700;color:#4a2a80;}
-  .pers h4.pers-h{font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal);margin:0 0 8px;}
-  .pers{background:#eef3f3;border:1px solid #cfe0e0;border-radius:var(--radius);padding:16px 18px;}
-  .pers-intro{font-size:.9rem;color:#544737;margin:.5em 0 .9em;line-height:1.6;}
-  footer{margin-top:46px;border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:.85rem;}
-  .pendcard{background:#eef3f3;border:1px solid #cfe0e0;border-radius:var(--radius);padding:16px 18px;margin:10px 0;}
-  .pendcard h4{margin:0 0 6px;color:var(--teal);}
-  .conf{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--red);font-weight:700;}
-  @media(max-width:760px){.lenses,.tri,.twocol{grid-template-columns:1fr}.rec .body{padding-left:18px}.dim .oneliner{display:none}}
-  /* 90-second Client Summary box – read-aloud, distinct from the internal-voice explainer */
-  .script-box{background:#eef3f3;border:1px solid #cfe0e0;border-left:4px solid var(--teal);
-    border-radius:var(--radius);padding:16px 20px;margin:14px 0 18px;box-shadow:var(--shadow);}
-  .script-head{display:flex;align-items:center;gap:10px;margin-bottom:10px;
-    border-bottom:1px solid #d0e0e0;padding-bottom:8px;flex-wrap:wrap;}
-  .script-icon{font-size:1.1rem;}
-  .script-label{font-style:italic;font-size:.88rem;color:var(--teal);font-weight:600;letter-spacing:.01em;}
-  .script-time{margin-left:auto;font-size:.74rem;color:var(--muted);font-weight:600;
-    text-transform:uppercase;letter-spacing:.06em;}
-  .script-body{margin:0;font-size:1rem;line-height:1.6;color:#3a4f4f;}
-  /* per-document one-line verdict */
-  .doc-verdict{color:#544737;font-size:.92rem;}
-  .sec-rf{color:#8a2e1e;}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--cream);color:var(--body-brown);
+    font-family:"Open Sans",Arial,sans-serif;font-size:16px;line-height:1.7;}
+  .wrap{max-width:1060px;margin:0 auto;padding:30px 24px 90px;}
+  p{max-width:72ch;margin:.55em 0}
+  /* ---------- masthead ---------- */
+  .kicker{font-family:Montserrat,sans-serif;font-weight:700;font-size:1.42rem;
+    color:var(--gold);text-transform:uppercase;letter-spacing:.04em;margin:6px 0 2px;}
+  h1{font-family:Montserrat,sans-serif;font-weight:800;font-size:2.5rem;letter-spacing:-.01em;
+    color:var(--maroon);margin:.05em 0 .1em;}
+  .subhead{font-family:Montserrat,sans-serif;font-weight:600;font-size:1.05rem;color:var(--maroon-mid);margin:0 0 6px;}
+  .poutama{position:absolute;top:0;right:0;opacity:.9}
+  header.mast{position:relative;padding:8px 0 4px;}
+  .wave{display:block;margin:26px auto 6px;}
+  /* ---------- interim banner ---------- */
+  .interim{display:flex;gap:14px;align-items:flex-start;background:#F7F3EA;
+    border:1px solid var(--sand);border-left:4px solid var(--gold);border-radius:var(--radius);
+    padding:15px 18px;margin:18px 0 20px;}
+  .interim .badge{flex:0 0 auto;background:var(--gold);color:#fff;font-family:Montserrat,sans-serif;
+    font-weight:700;font-size:.72rem;letter-spacing:.07em;padding:5px 10px;border-radius:7px;
+    text-transform:uppercase;margin-top:2px;}
+  .interim p{margin:0;font-size:.95rem;}
+  /* ---------- TOC ---------- */
+  .toc{background:var(--card);border:1px solid var(--sand);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px 22px;margin:0 0 26px;}
+  .toc h2{font-family:Montserrat,sans-serif;font-weight:700;font-size:1.02rem;color:var(--maroon);
+    margin:0 0 10px;border-bottom:2px solid var(--gold);display:inline-block;padding-bottom:4px;}
+  .toc a{display:flex;gap:10px;align-items:baseline;text-decoration:none;padding:5px 2px;
+    border-bottom:1px dotted var(--sand);}
+  .toc a:last-child{border-bottom:none}
+  .toc .t{font-family:Montserrat,sans-serif;font-weight:600;font-size:.93rem;color:var(--maroon);white-space:nowrap;}
+  .toc .d{font-size:.88rem;color:var(--taupe);}
+  .toc a:hover .t{color:var(--maroon-mid)}
+  /* ---------- sections ---------- */
+  section.sec{background:var(--card);border:1px solid var(--sand);border-radius:var(--radius);
+    box-shadow:var(--shadow);margin:0 0 22px;overflow:hidden;}
+  .sec-head{display:flex;align-items:baseline;gap:14px;padding:16px 22px 14px;cursor:pointer;}
+  .sec-head h2{font-family:Montserrat,sans-serif;font-weight:800;font-size:1.42rem;margin:0;
+    border-bottom:2px solid var(--gold);padding-bottom:4px;}
+  .sec-head .reo{color:var(--gold);text-transform:uppercase;}
+  .sec-head .pipe{color:var(--clay);font-weight:400;}
+  .sec-head .eng{color:var(--maroon);font-style:italic;}
+  .sec-head h2.mono{color:var(--maroon);font-style:normal;}
+  .secdesc{font-size:.88rem;color:var(--taupe);flex:1 1 auto;}
+  .chev{margin-left:auto;color:var(--taupe);font-size:.95rem;transition:transform .18s;flex:0 0 auto;}
+  section.sec.collapsed .sec-body{display:none}
+  section.sec.collapsed .chev{transform:rotate(-90deg)}
+  .sec-body{padding:2px 22px 20px;}
+  /* ---------- facilitator script ---------- */
+  .script-box{background:#FBF8F1;border:1px solid var(--sand);border-left:4px solid var(--maroon-mid);
+    border-radius:10px;padding:16px 20px;margin:8px 0 4px;}
+  .script-box .lab{font-family:Montserrat,sans-serif;font-style:italic;font-weight:600;
+    font-size:.88rem;color:var(--maroon-mid);margin-bottom:8px;}
+  .script-box .body{font-size:1.02rem;line-height:1.75;}
+  /* ---------- lens strip ---------- */
+  .lenses{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:14px 0 6px;}
+  .lens{background:#FDFCF9;border:1px solid var(--sand);border-radius:10px;padding:13px 15px;}
+  .lens h3{font-family:Montserrat,sans-serif;font-weight:700;font-size:.97rem;color:var(--maroon);margin:.1em 0 .2em;}
+  .lens h3 .lreo{color:var(--gold);font-weight:600;}
+  .lens .state{font-family:Montserrat,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+  .lens.done .state{color:var(--green)} .lens.wait .state{color:var(--amber)}
+  .lens p{font-size:.88rem;margin:.35em 0 0}
+  /* ---------- dots & marks (status = status only) ---------- */
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:9px;vertical-align:baseline;flex:0 0 auto;position:relative;top:1px;}
+  .dot.st-green{background:var(--green)} .dot.st-amber{background:var(--amber)}
+  .dot.st-red{background:var(--red)} .dot.st-grey{background:var(--grey)}
+  .dot.st-likely{background:transparent;border:2.5px dashed var(--red);width:11px;height:11px;}
+  .mark{font-weight:700;margin-right:7px;}
+  .mark.ok{color:var(--green)} .mark.no{color:var(--red)}
+  /* ---------- documents list ---------- */
+  .doclist{list-style:none;margin:10px 0;padding:0;}
+  .doclist li{display:flex;align-items:baseline;padding:9px 4px;border-bottom:1px dotted var(--sand);font-size:.96rem;}
+  .doclist li:last-child{border-bottom:none}
+  .doclist .nm{font-weight:700;color:var(--maroon);}
+  /* ---------- snapshot tri-tier ---------- */
+  .tri{display:grid;grid-template-columns:1fr;gap:12px;margin:12px 0 4px;}
+  .tierbox{border-radius:10px;padding:13px 17px;border:1px solid var(--sand);}
+  .tierbox h3{font-family:Montserrat,sans-serif;font-size:.98rem;font-weight:700;margin:0 0 7px;}
+  .tierbox ul{margin:0;padding-left:2px;list-style:none;}
+  .tierbox li{display:flex;align-items:baseline;padding:4px 0;font-size:.95rem;}
+  .tierbox li .m{margin-right:9px;font-weight:700;flex:0 0 auto;}
+  .tier-g{background:var(--green-bg)} .tier-g h3,.tier-g .m{color:var(--green)}
+  .tier-a{background:var(--amber-bg)} .tier-a h3,.tier-a .m{color:var(--amber)}
+  .tier-q{background:#F4EFE7} .tier-q h3,.tier-q .m{color:var(--maroon-mid)}
+  /* ---------- rec cards ---------- */
+  .key{background:#F7F3EA;border:1px solid var(--sand);border-radius:10px;padding:12px 16px;margin:10px 0 16px;font-size:.9rem;}
+  .key b{color:var(--maroon)}
+  details.card{border:1px solid var(--sand);border-radius:10px;margin:0 0 12px;background:#FDFCF9;}
+  details.card summary{display:flex;align-items:baseline;gap:12px;padding:13px 17px;cursor:pointer;list-style:none;}
+  details.card summary::-webkit-details-marker{display:none}
+  details.card summary .num{font-family:Montserrat,sans-serif;font-weight:800;font-size:1.25rem;color:var(--gold);min-width:1.5em;}
+  details.card summary .ttl{font-family:Montserrat,sans-serif;font-weight:700;font-size:1.02rem;color:var(--maroon);flex:1 1 auto;}
+  details.card summary .arrow{color:var(--taupe);flex:0 0 auto;}
+  details.card[open] summary .arrow{transform:rotate(90deg)}
+  .card-body{padding:0 17px 15px 17px;border-top:1px dotted var(--sand);}
+  .fld{margin:12px 0}
+  .fld .flab{font-family:Montserrat,sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--maroon-mid);margin-bottom:4px;}
+  .fld ul{margin:.3em 0;padding-left:0;list-style:none}
+  .fld li{display:flex;align-items:baseline;padding:3px 0;font-size:.94rem;}
+  .badge{display:inline-block;font-family:Montserrat,sans-serif;font-weight:700;font-size:.7rem;
+    letter-spacing:.06em;text-transform:uppercase;border-radius:7px;padding:4px 9px;flex:0 0 auto;}
+  .b-cert{background:var(--maroon);color:#fff}
+  .b-two{background:var(--maroon-mid);color:#fff}
+  .b-doc{background:var(--clay);color:#fff}
+  .b-sur{background:var(--gold);color:#fff}
+  /* ---------- red flags ---------- */
+  #sec-redflags .sec-head .eng{color:#8B0000}
+  .rf-group{margin:14px 0}
+  .rf-group h3{font-family:Montserrat,sans-serif;font-weight:700;font-size:1rem;color:var(--maroon);margin:0 0 6px;}
+  .rf{display:flex;align-items:baseline;padding:7px 2px;border-bottom:1px dotted var(--sand);font-size:.95rem;}
+  .rf:last-child{border-bottom:none}
+  .rf .sc{color:var(--taupe);font-size:.86rem;white-space:nowrap;margin-left:12px;}
+  .rf b{color:var(--maroon)}
+  .lk{display:inline-block;font-family:Montserrat,sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--red);border:1.5px dashed var(--red);border-radius:6px;padding:2px 7px;margin-right:9px;flex:0 0 auto;}
+  .cellref{color:var(--taupe);font-size:.84rem;}
+  /* ---------- whare cards ---------- */
+  details.dim{border:1px solid var(--sand);border-radius:10px;margin:0 0 12px;background:#FDFCF9;}
+  details.dim summary{display:flex;align-items:baseline;gap:12px;padding:13px 17px;cursor:pointer;list-style:none;}
+  details.dim summary::-webkit-details-marker{display:none}
+  details.dim .dh{flex:1 1 auto}
+  details.dim .dh .dt{font-family:Montserrat,sans-serif;font-weight:800;font-size:1rem;color:var(--gold);text-transform:uppercase;}
+  details.dim .dh .de{font-family:Montserrat,sans-serif;font-weight:600;font-style:italic;font-size:.95rem;color:var(--maroon);}
+  details.dim .dh .one{display:block;font-size:.9rem;color:var(--body-brown);margin-top:2px;}
+  .prio{display:inline-block;background:var(--maroon-mid);color:#fff;font-family:Montserrat,sans-serif;
+    font-weight:700;font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;border-radius:6px;padding:2px 8px;margin-left:8px;}
+  .dim-body{padding:0 17px 15px;border-top:1px dotted var(--sand);}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0;}
+  @media(max-width:760px){.twocol{grid-template-columns:1fr}.lenses{grid-template-columns:1fr}}
+  .seecol h4{font-family:Montserrat,sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--maroon-mid);margin:0 0 5px;}
+  .seecol ul{margin:0;padding-left:0;list-style:none}
+  .seecol li{display:flex;align-items:baseline;padding:3px 0;font-size:.93rem;}
+  .strength{background:var(--green-bg);border-radius:8px;padding:10px 14px;margin:11px 0;font-size:.95rem;}
+  .strength b{color:var(--green)}
+  .probe{background:#F4EFE7;border-radius:8px;padding:10px 14px;margin:11px 0;font-size:.93rem;}
+  .probe b{color:var(--maroon-mid)}
+  /* ---------- footer ---------- */
+  footer{margin-top:30px;border-top:1px solid var(--sand);padding-top:18px;font-size:.86rem;color:var(--taupe);}
+  footer b{color:var(--maroon)}
+  .scorekey{background:#F7F3EA;border:1px solid var(--sand);border-radius:10px;padding:11px 15px;margin:10px 0;font-size:.89rem;}
+  /* ---------- print ---------- */
+  @media print{
+    section.sec.collapsed .sec-body{display:block!important}
+    .chev,.toc{display:none}
+    body{background:#fff}
+    section.sec{box-shadow:none;break-inside:avoid-page}
+  }
 </style>
-</head>
+<style data-tooling>
+  /* Edit-mode visual treatment — applied only when body has .dqc-editing */
+  body.dqc-editing [data-edit]{ outline:1.5px dashed rgba(47,111,143,.55); outline-offset:3px; border-radius:3px; transition:background .12s; cursor:text; }
+  body.dqc-editing [data-edit="text"]:hover{ background:#E3EEF3; }
+  body.dqc-editing [data-edit="text"]:focus{ outline:2px solid #2F6F8F; background:#fff; }
+  body.dqc-editing [data-edit="status"]{ cursor:pointer; }
+  body.dqc-editing [data-edit="status"]:hover{ filter:brightness(1.05); }
+  [data-edit].dqc-edited{ background:rgba(196,150,44,.18); }
+  body.dqc-editing [data-edit].dqc-edited{ background:rgba(196,150,44,.26); }
+  [data-edit="status"].dqc-edited{ box-shadow:0 0 0 2px rgba(196,150,44,.55); border-radius:6px; }
+
+  /* Toolbar */
+  body{ padding-top:60px; }
+  body.dqc-editing{ padding-top:100px; }
+  #dqc-toolbar{ position:fixed; top:0; left:0; right:0; height:60px; z-index:1000; background:#3B0F0F; color:#EFECE5; display:flex; align-items:center; gap:14px; padding:0 20px; box-shadow:0 2px 12px rgba(0,0,0,.25); font-family:'Inter','Helvetica Neue',Arial,sans-serif; font-size:13px; }
+  #dqc-toolbar .dqc-brand{ font-family:'Fraunces',Georgia,serif; font-size:15px; font-weight:600; color:#E7D5A8; line-height:1.1; }
+  #dqc-toolbar .dqc-brand small{ display:block; font-family:'Inter','Helvetica Neue',Arial,sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:rgba(231,213,168,.65); font-weight:500; margin-top:2px; }
+  #dqc-toolbar .dqc-spacer{ flex:1; }
+  #dqc-toolbar .dqc-pill{ font-size:11px; background:rgba(255,255,255,.1); padding:5px 11px; border-radius:999px; }
+  #dqc-toolbar .dqc-pill b{ color:#E7D5A8; }
+  .dqc-btn{ font:600 12px/1 'Inter','Helvetica Neue',Arial,sans-serif; border:none; border-radius:7px; padding:8px 14px; cursor:pointer; transition:transform .08s,filter .12s; }
+  .dqc-btn:active{ transform:translateY(1px); }
+  .dqc-btn-edit{ background:#C4962C; color:#3B0F0F; }
+  .dqc-btn-edit.on{ background:#74A77E; color:#fff; }
+  .dqc-btn-save{ background:#EFECE5; color:#3B0F0F; }
+  .dqc-btn-save[disabled]{ opacity:.4; cursor:default; }
+  .dqc-btn-ghost{ background:transparent; color:#EFECE5; border:1px solid rgba(255,255,255,.3); }
+
+  /* Hint bar */
+  #dqc-hint{ position:fixed; top:60px; left:0; right:0; z-index:999; background:#E3EEF3; color:#1d4a5e; font-size:12px; padding:8px 20px; display:none; border-bottom:1px solid #c5dbe5; font-family:'Inter','Helvetica Neue',Arial,sans-serif; }
+  body.dqc-editing #dqc-hint{ display:block; }
+
+  /* Save panel */
+  #dqc-overlay{ position:fixed; inset:0; background:rgba(26,22,20,.55); z-index:1100; display:none; align-items:flex-start; justify-content:center; padding:60px 20px; overflow:auto; }
+  #dqc-overlay.open{ display:flex; }
+  .dqc-panel{ position:relative; background:#EFECE5; border-radius:14px; max-width:760px; width:100%; padding:26px 28px 24px; box-shadow:0 20px 60px rgba(0,0,0,.35); color:#1A1614; font-family:'Inter','Helvetica Neue',Arial,sans-serif; }
+  .dqc-panel h2{ font-family:'Fraunces',Georgia,serif; font-size:22px; color:#5C1A1A; margin:0 0 4px; }
+  .dqc-panel-lead{ font-size:13px; color:#5A554F; margin:0 0 18px; }
+  .dqc-panel-x{ position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; border:1px solid #D9CDB3; background:#fff; color:#5A554F; font-size:18px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .12s,color .12s; }
+  .dqc-panel-x:hover{ background:#5C1A1A; color:#EFECE5; border-color:#5C1A1A; }
+  #dqc-summary{ font-size:13px; margin-bottom:14px; padding:9px 13px; background:#fff; border:1px solid #D9CDB3; border-radius:8px; }
+  #dqc-change-list{ max-height:300px; overflow:auto; border:1px solid #D9CDB3; border-radius:8px; background:#fff; margin-bottom:16px; }
+  .dqc-change{ padding:11px 13px; border-bottom:1px solid #E7DFCB; font-size:12px; }
+  .dqc-change:last-child{ border-bottom:none; }
+  .dqc-where{ font-size:10px; letter-spacing:.04em; text-transform:uppercase; color:#723328; font-weight:700; margin-bottom:3px; }
+  .dqc-yaml{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:10px; color:#2F6F8F; background:#E3EEF3; padding:1px 5px; border-radius:3px; }
+  .dqc-before{ color:#9a3528; text-decoration:line-through; opacity:.8; }
+  .dqc-after{ color:#2f5b34; font-weight:500; }
+  .dqc-arrow{ color:#5A554F; margin:0 4px; }
+  .dqc-actions{ display:flex; gap:9px; flex-wrap:wrap; }
+  .dqc-none{ padding:24px; text-align:center; color:#5A554F; font-size:13px; }
+  .dqc-aside{ font-size:11px; color:#5A554F; margin-top:14px; border-top:1px solid #D9CDB3; padding-top:10px; }
+
+  /* transclusion: a mirror is a read-only reflection of its canonical */
+  body.dqc-editing .dqc-mirror{ background:rgba(47,111,143,.045); border-left:2px solid rgba(47,111,143,.30); padding-left:6px; border-radius:2px; }
+  body.dqc-editing .dqc-mirror:hover{ background:rgba(47,111,143,.09); }
+
+  /* structural editing (prep/draft) — runtime controls, edit-mode only */
+  .dqc-struct-ctl,.dqc-add-btn,.dqc-dim-select{ display:none; }
+  body.dqc-editing .dqc-struct-ctl{ display:inline-flex; gap:3px; margin-left:8px; vertical-align:middle; }
+  body.dqc-editing .dqc-add-btn{ display:inline-block; margin:12px 4px 4px; }
+  body.dqc-editing .dqc-dim-select{ display:inline-block; margin-left:8px; font:600 11px/1.2 'Inter','Helvetica Neue',Arial,sans-serif;
+    color:#5C1A1A; border:1px solid #C49A6C; border-radius:5px; padding:2px 6px; background:#fff; cursor:pointer; vertical-align:middle; }
+  .dqc-struct-btn{ font:600 11px/1 'Inter','Helvetica Neue',Arial,sans-serif; border:1px solid #D9CDB3; background:#fff; color:#5C1A1A; border-radius:5px; padding:2px 6px; cursor:pointer; }
+  .dqc-struct-btn:hover{ background:#F3ECD9; }
+  body.dqc-editing .rec-card-header{ position:relative; }
+  body.dqc-editing .all-rf-head{ position:relative; }
+  body.dqc-editing .dqc-dim-unset{ color:#9a3528; font-style:italic; }
+</style></head>
 <body>
+<div id="dqc-toolbar" data-tooling>
+  <div class="dqc-brand">Te Whare Hukahuka<small>DQC review workspace</small></div>
+  <div class="dqc-spacer"></div>
+  <span class="dqc-pill" id="dqc-edit-count-pill"><b id="dqc-edit-count">0</b> edits</span>
+  <button class="dqc-btn dqc-btn-edit" id="dqc-toggle" type="button">Enter edit mode</button>
+  <button class="dqc-btn dqc-btn-save" id="dqc-open-save" type="button" disabled>Finish &amp; save…</button>
+</div>
+<div id="dqc-hint" data-tooling>
+  <b>Edit mode is on.</b> Click any outlined text to rewrite it. Click a traffic-light chip to change its rating. Generated numbers, structural labels, and computed counts are locked because changing them would be silently overwritten on the next regeneration.
+</div>
+
 <div class="wrap">
 
-  <header class="top">
-    <div class="kicker">Te Whare Hukahuka · Governance Aromatawai</div>
-    <h1>Hurunui o Rangi Marae – Governance Health</h1>
-    <p class="sub">Prep Dashboard · V1 · facilitator working view, for interview preparation · June 2026</p>
-  </header>
+<header class="mast">
+  <svg class="poutama" width="150" height="66" viewBox="0 0 150 66" aria-hidden="true">
+    <g fill="#AF6722" opacity="0.22">
+      <rect x="126" y="0" width="24" height="22"/><rect x="102" y="22" width="24" height="22"/><rect x="78" y="44" width="24" height="22"/>
+    </g>
+    <g fill="#5C1A1A" opacity="0.18">
+      <rect x="126" y="22" width="24" height="22"/><rect x="102" y="44" width="24" height="22"/>
+    </g>
+  </svg>
+  <div class="kicker" data-edit="text" data-field="kicker 1" data-yaml="kicker[0]">Governance Aromatawai – Prep Dashboard · August 2026</div>
+  <h1>Hurunui o Rangi Marae</h1>
+  <p class="subhead" data-edit="text" data-field="subhead 1" data-yaml="subhead[0]">Facilitator working view, for interview preparation · V2</p>
+</header>
 
-  <div class="interim">
-    <span class="badge">Prep · Interim</span>
-    <p><b>This is the prep dashboard – a two-of-three-lens view, built for the facilitator, not the board.</b> It draws together the document reviews and the trustee survey to orient the facilitator before the kōrero. The interview lens is still to come; nothing here is a settled conclusion. The next products are the <b>draft</b> dashboard (after interviews) and the <b>client</b> dashboard (final, board-facing). Names are retained because this is an internal working view.</p>
+<div class="interim">
+  <span class="badge">Prep · Interim</span>
+  <p>This is the prep dashboard – a two-of-three-lens view, built for the facilitator, not the board.
+  It draws together the document reviews and the trustee survey to orient the facilitator before the kōrero.
+  The interview lens is still to come; nothing here is a settled conclusion. The next products are the
+  <b>draft</b> dashboard (after interviews) and the <b>client</b> dashboard (final, board-facing).
+  Names are retained because this is an internal working view.</p>
+</div>
+
+<nav class="toc" id="toc">
+  <h2>On this page</h2>
+  <a href="#sec-script"><span class="t">Facilitator script</span><span class="d" data-edit="text" data-field="d 1" data-yaml="d[0]">The 90-second opening, read aloud at each interview</span></a>
+  <a href="#sec-lenses"><span class="t">The three lenses</span><span class="d" data-edit="text" data-field="d 2" data-yaml="d[1]">Documents and survey are in; interviews are pending</span></a>
+  <a href="#sec-picture"><span class="t">The picture so far</span><span class="d" data-edit="text" data-field="d 3" data-yaml="d[2]">The strength to build on, and the shape of the work</span></a>
+  <a href="#sec-docs"><span class="t">Documents reviewed</span><span class="d" data-edit="text" data-field="d 4" data-yaml="d[3]">Four reviews covering nine documents, with a verdict on each</span></a>
+  <a href="#sec-snapshot"><span class="t">Governance snapshot</span><span class="d" data-edit="text" data-field="d 5" data-yaml="d[4]">Strengths to hold, areas to build, questions for the interviews</span></a>
+  <a href="#sec-recs"><span class="t">Top ten recommendations</span><span class="d" data-edit="text" data-field="d 6" data-yaml="d[5]">The merged list from the document and survey lenses</span></a>
+  <a href="#sec-redflags"><span class="t">Red flags</span><span class="d" data-edit="text" data-field="d 7" data-yaml="d[6]">What is flagging now – likely, pending interviews</span></a>
+  <a href="#sec-whare"><span class="t">The eight whare components</span><span class="d" data-edit="text" data-field="d 8" data-yaml="d[7]">Each dimension: strength first, then what each lens sees</span></a>
+  <a href="#sec-waiting"><span class="t">What this view is waiting on</span><span class="d" data-edit="text" data-field="d 9" data-yaml="d[8]">The interview lens, and the products that follow</span></a>
+  <a href="#sec-personality"><span class="t">Personality profiles</span><span class="d" data-edit="text" data-field="d 10" data-yaml="d[9]">Not gathered for this engagement</span></a>
+</nav>
+
+<section class="sec" id="sec-script">
+  <div class="sec-head">
+    <h2 class="mono">🎙 Facilitator script</h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 1" data-yaml="secdesc[0]">The 90-second opening, read aloud at each interview</span>
+    <span class="chev">▾</span>
   </div>
-
-  <div class="script-box">
-    <div class="script-head">
-      <span class="script-icon">🎙</span>
-      <span class="script-label">Facilitator script – read aloud at interview open</span>
-      <span class="script-time">~90 seconds</span>
+  <div class="sec-body">
+    <div class="script-box">
+      <div class="lab" data-edit="text" data-field="lab 1" data-yaml="lab[0]">Facilitator script – read aloud or paraphrased at the interview open · ~90 seconds</div>
+      <div class="body" data-edit="text" data-field="body 1" data-yaml="body[0]">"Thank you for the nine documents and the six survey responses you've shared with us –
+      one hundred and sixty-two scored answers plus your written kōrero. The picture coming through is strong
+      in real places. Your 2018 Constitution and Charter give the marae a thorough legal foundation. The board
+      is actively building its policies – the Conflict of Interest Policy and Code of Conduct are recent, well
+      made and in use. Your 2024/25 Strategic Plan tells one clear story about te reo. And your connection to
+      whānau and community is the highest-rated area in the survey, with the new marae build the shared kaupapa. The opportunities to grow into are making the money fully visible to every trustee,
+      agreeing how the board works through disagreement, and the meeting basics that keep decisions moving –
+      quorum, papers, actions. What we're hoping to learn from you today is what the data alone can't tell us –
+      why the board reads itself so differently from seat to seat, what disagreement looks like in the room,
+      and what information reaches you before a hui."</div>
     </div>
-    <p class="script-body">"Thank you for the eight documents and the six survey responses you've shared with us – one hundred and sixty-two scored answers plus your written kōrero. The picture coming through is strong in real places: your 2018 Constitution and Charter give the marae a thorough legal foundation; the board is actively building its policy layer – the Conflict of Interest policy and Code of Conduct are recent, well made and in use; and your connection to whānau and community is the highest-rated area in the survey, with the new marae build and te reo the shared kaupapa across the board. The opportunities to grow into are the machinery underneath that fire – making the money fully visible to every trustee, agreeing how the board works through disagreement, and the meeting basics that keep decisions moving: quorum, papers, actions. What we're hoping to learn from you today is what the data alone can't tell us – why the board reads itself so differently from seat to seat, what disagreement looks like in the room, and what information reaches you before a hui."</p>
   </div>
+</section>
 
-  <div class="lenses">
-    <div class="lens done"><span class="ico">📄</span><h3>Documents | Pukapuka</h3><div class="state">✓ Reviewed</div><p>Eight documents across three reviews (see the list below). No Annual Budget, current Strategic Plan, or full board pack was supplied – scoped, not scored.</p></div>
-    <div class="lens done"><span class="ico">📊</span><h3>Surveys | Tirohanga</h3><div class="state">✓ Analysed</div><p>Tirohanga – 6 trustees, 27 scored items + free text. Ranked on the all-board average, with the critical-four read carried alongside every score.</p></div>
-    <div class="lens pending"><span class="ico">🗣️</span><h3>Interviews | Kōrero</h3><div class="state">⏳ Pending</div><p>V1 guide ready. Five core kōrero (Justina, Kim, Josephine, Mei, PJ); Marlene optional. This view feeds that prep.</p></div>
+<section class="sec" id="sec-lenses">
+  <div class="sec-head">
+    <h2 class="mono">The three lenses</h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 2" data-yaml="secdesc[1]">Documents and survey are in; interviews are pending</span>
+    <span class="chev">▾</span>
   </div>
-
-  <section>
-    <div class="explainer">
-      <p><b>The strength to build on.</b> Hurunui o Rangi is a small, volunteer-run marae where six trustees do both governance and operations – the hui runs on portfolios (finances, compliance, papakāinga, buildings, events, te reo). Its 2018 constitutional architecture is genuinely strong, and the 2024–25 policy run shows a board actively building its governance layer one well-made document at a time. Tikanga is held in the hui, the kaupapa record is real – Pā Wars, Kura Reo, the papakāinga paid off – and connection to whānau and community is the highest-rated thing in the whole survey: the one area both halves of the board agree is strong. Five of six trustees independently name the new marae build as the top priority.</p>
-      <p><b>The shape of the work.</b> Across both lenses, the same picture appears: the foundations and the kaupapa fire are real; what is thin is the <i>operating layer</i> that turns intention into tracked, lawful action – who may decide and spend what, the two legal-duty policies, a held strategy rhythm, decision-and-action discipline in the hui – and, underneath all of it, what the survey says loudest: an agreed way for six trustees to work through disagreement, and enough of them in the room for decisions to be made at all.</p>
-      <p class="whakatauki">Gaps here are read as opportunities, not deficiencies. Documents a small marae has not yet produced or shared (a consolidated governance manual, a budget document, a full board pack) are noted as not-yet-built or not-yet-seen – never marked as poor.</p>
+  <div class="sec-body">
+    <div class="lenses">
+      <div class="lens done">
+        <h3>📄 Documents <span class="lreo">| Pukapuka</span></h3>
+        <div class="state">✓ Reviewed</div>
+        <p>Nine documents across four reviews (see the list below). The 2024/25 Strategic Plan arrived after
+        V1 of this dashboard; its review is folded in here. No Annual Budget or full board pack was supplied –
+        noted, not scored.</p>
+      </div>
+      <div class="lens done">
+        <h3>📊 Surveys <span class="lreo">| Tirohanga</span></h3>
+        <div class="state">✓ Analysed</div>
+        <p>Six trustees answered 27 scored items plus tick-box and written questions. Every score is shown two
+        ways: the average across all six, and the average from the four lower-scoring trustees.</p>
+      </div>
+      <div class="lens wait">
+        <h3>🗣️ Interviews <span class="lreo">| Kōrero</span></h3>
+        <div class="state">⏳ Pending</div>
+        <p>The interview guide (V2) is ready. Five core kōrero – Justina, Kim, Josephine, Mei and PJ – with
+        Marlene optional. This view is the preparation for those conversations.</p>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <h2 class="sec">Documents reviewed</h2>
-    <p class="sec-note">✓ reviewed &nbsp;·&nbsp; ✗ not yet provided. Five document types were requested; three arrived (covering eight documents). The last three lines are scoped, not scored – absence is never rated as poor. 🟣 Purple – facilitator determination required: the evidence is genuinely torn between two bands; the facilitator makes this call, informed by the interviews. See the note under each purple item. One closing note from the reviews: several gaps the Deed review flagged are already answered elsewhere in the set – the 2024 Conflict of Interest policy actioned the Deed review's own first recommendation before it was made.</p>
-    <ul class="docs-list">
-      <li class="yes"><span class="mk">✓</span> Trust Deed / Constitution (2018) – <span class="doc-verdict">🟢 A thorough, well-structured legal foundation – nineteen items clearly in place; the modern-controls layer (delegation limits, transaction thresholds, performance review, dispute resolution) to strengthen</span></li>
-      <li class="yes"><span class="mk">✓</span> Charter &amp; Policy Set (2018–2025) <span class="small">– Charter + Conflict of Interest 2024, Code of Conduct 2025, Key Holder 2025, Facebook 2024; reviewed as a set against the 17-item manual checklist</span> – <span class="doc-verdict">🟡 A strong constitutional Charter with an active, recent policy build around it; the formal policy layer a manual carries (Health &amp; Safety, risk, financial management, position descriptions, continuity) not yet written up</span></li>
-      <li class="yes"><span class="mk">✓</span> Meeting Agendas (AGM Oct 2025 + draft trustee hui May 2026) <span class="small">– reviewed agenda-only; no attached papers</span> – <span class="doc-verdict">🟣 Tikanga held and continuity strong; the decision-and-action layer (action tracker, decision marking, correspondence log) not yet on the page</span>
-        <div class="purple-note" style="margin:10px 0 2px;">
-          <div><span class="pl">Case for amber:</span> tikanga is held (karakia bookends, te reo throughout) and continuity is strong – minutes confirmed, matters arising tracked, next hui scheduled, guiding policies referenced; an agenda-only review of a portfolio-run board can understate the room.</div>
-          <div><span class="pl">Case for red:</span> eight not-yet items – the heaviest red concentration in any single review: no action tracker, no decision marking (a trustee election and a vacancy sit unmarked), no correspondence log, no item times, no mover/seconder process or pre-drafted resolutions.</div>
-          <div><span class="pl">Interviews will settle →</span> Mei: "When the board makes a decision, where does it get written down – and who carries the actions afterwards?" · Justina: what trustees actually receive before a hui. If practice runs ahead of the page, amber stands; if the page reflects the room, this is red.</div>
-        </div></li>
-      <li class="no"><span class="mk">✗</span> Annual Budget <span class="small">– not-yet-seen (the AGM agenda names a Financial Performance Report, so financial reporting exists in some form; it never reached this lens and is not assumed deficient)</span></li>
-      <li class="no"><span class="mk">✗</span> Current Strategic Plan <span class="small">– likely not-yet-built (the Charter makes the Marae Development Plan optional and a planning wānanga is scheduled – a plan being formed now, not a document withheld)</span></li>
-      <li class="no"><span class="mk">✗</span> Full board pack (papers and financials) <span class="small">– not-yet-seen (the contents that carry financial, risk and strategic oversight sit outside the Meeting Agendas; scoped out by the Meeting Agenda review itself)</span></li>
+<section class="sec" id="sec-picture">
+  <div class="sec-head">
+    <h2 class="mono">The picture so far</h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 3" data-yaml="secdesc[2]">The strength to build on, and the shape of the work</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
+    <p><b style="color:var(--green)">The strength to build on.</b>
+    Hurunui o Rangi is a small, volunteer-run marae. Six trustees do both governance and operations, and the
+    hui runs on portfolios – finances, compliance, papakāinga, buildings, events, te reo. The 2018 Constitution
+    and Charter are genuinely strong. The 2024–25 policy run shows a board building its governance one well-made
+    document at a time. Tikanga is held in the hui. The kaupapa record is real – Pā Wars, Kura Reo, the papakāinga
+    paid off. Connection to whānau and community is the highest-rated area in the whole survey, and the only one
+    both halves of the board agree is strong. Five of six trustees independently name the new marae build as the
+    top priority.</p>
+    <p><b style="color:var(--amber)">The shape of the work.</b>
+    Both lenses show the same picture. The foundations and the kaupapa fire are real. What needs building is the
+    working level underneath them: who may decide and spend what, the two policies the law expects (Health &amp;
+    Safety and risk), a strategy the board reviews rather than files away, and meeting habits that turn decisions
+    into tracked actions. Underneath all of it sits what the survey says loudest – the board needs an agreed way
+    to work through disagreement, and enough trustees in the room for decisions to be made at all.</p>
+    <p style="font-size:.92rem;color:var(--taupe)">Gaps here are read as opportunities, not deficiencies.
+    Documents a small marae has not yet produced or shared – a consolidated Governance Manual, an Annual Budget,
+    a full Board Pack – are noted as not-yet-built or not-yet-seen, never marked as poor.</p>
+  </div>
+</section>
+
+<section class="sec" id="sec-docs">
+  <div class="sec-head">
+    <h2><span class="reo" data-edit="text" data-field="reo 1" data-yaml="reo[0]">Ngā Pukapuka</span><span class="pipe">&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="eng">Documents reviewed</span></h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 4" data-yaml="secdesc[3]">Four reviews covering nine documents, with a verdict on each</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
+    <p style="font-size:.93rem">✓ reviewed · ✗ not yet provided. Five document types were requested. Four reviews
+    now cover nine documents – the 2024/25 Strategic Plan arrived after V1 of this dashboard and its review is
+    folded in here. The last three lines are noted, not scored: absence is never rated as poor. One closing note
+    from the reviews: several gaps the Deed review flagged are already answered elsewhere in the set – the 2024
+    Conflict of Interest Policy actioned the Deed review's own first recommendation before it was made.</p>
+    <ul class="doclist">
+      <li><span class="mark ok">✓</span><span class="dot st-green"></span><span><span class="nm" data-edit="text" data-field="nm 1" data-yaml="nm[0]">Trust Deed / Constitution (2018)</span> –
+        a thorough, well-structured legal foundation. Nineteen items are clearly in place. The modern controls –
+        delegation limits, transaction thresholds, performance review, dispute resolution – are the part to strengthen.</span></li>
+      <li><span class="mark ok">✓</span><span class="dot st-amber"></span><span><span class="nm" data-edit="text" data-field="nm 2" data-yaml="nm[1]">Charter &amp; Policy Set (2018–2025)</span> –
+        Charter plus Conflict of Interest 2024, Code of Conduct 2025, Key Holder 2025, Facebook 2024, reviewed as a set
+        against the 17-item Governance Manual checklist. A strong constitutional Charter with an active, recent policy
+        build around it. The formal policies a Manual carries – Health &amp; Safety, risk, financial management,
+        position descriptions, continuity – are not yet written up.</span></li>
+      <li><span class="mark ok">✓</span><span class="dot st-amber"></span><span><span class="nm" data-edit="text" data-field="nm 3" data-yaml="nm[2]">Meeting Agendas (AGM Oct 2025 + draft trustee hui May 2026)</span> –
+        reviewed as standalone Meeting Agendas; no attached papers. Tikanga is held and continuity is strong. The decision-and-action
+        habits – an action tracker, decisions clearly marked, a correspondence log – are not yet on the page.</span></li>
+      <li><span class="mark ok">✓</span><span class="dot st-amber"></span><span><span class="nm" data-edit="text" data-field="nm 4" data-yaml="nm[3]">Strategic Plan 2024/25 – the previous plan</span> –
+        reviewed June 2026, after V1. Strong direction, deeply grounded in te ao Māori: vision, values and priorities
+        tell one clear story about te reo. What it lacks is the part a board governs with – success measures, named
+        owners, and a review cycle. Its 24-month term has now ended.</span></li>
+      <li><span class="mark no">✗</span><span class="dot st-grey"></span><span><span class="nm" data-edit="text" data-field="nm 5" data-yaml="nm[4]">Annual Budget</span> – not yet seen.
+        The AGM agenda names a Financial Performance Report, so financial reporting exists in some form. It never
+        reached this review and is not assumed deficient.</span></li>
+      <li><span class="mark no">✗</span><span class="dot st-grey"></span><span><span class="nm" data-edit="text" data-field="nm 6" data-yaml="nm[5]">Current Strategic Plan</span> – in development.
+        The 2024/25 plan has lapsed, and a strategy planning wānanga is already scheduled to shape the next one –
+        a plan being formed now, not a document withheld.</span></li>
+      <li><span class="mark no">✗</span><span class="dot st-grey"></span><span><span class="nm" data-edit="text" data-field="nm 7" data-yaml="nm[6]">Full Board Pack (papers and financials)</span> – not yet seen.
+        The contents that carry financial, risk and strategic oversight sit outside the Meeting Agendas – noted by
+        the Meeting Agenda review itself as beyond its reach.</span></li>
     </ul>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <h2 class="sec">Snapshot</h2>
-    <p class="sec-note">Strengths to hold, areas to build, and the questions only the interviews can answer.</p>
+<section class="sec" id="sec-snapshot">
+  <div class="sec-head">
+    <h2><span class="reo" data-edit="text" data-field="reo 2" data-yaml="reo[1]">Te Hoahoa Tapeke</span><span class="pipe">&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="eng">Governance snapshot</span></h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 5" data-yaml="secdesc[4]">Strengths to hold, areas to build, questions for the interviews</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
     <div class="tri">
-      <div class="col g">
-        <h4>✓ Strengths to hold</h4>
+      <div class="tierbox tier-g">
+        <h3>✓ Strengths to hold</h3>
         <ul>
-          <li>A thorough, well-structured 2018 legal foundation – nineteen Deed items clearly in place.</li>
-          <li>An active, recent policy build – Conflict of Interest 2024 (with a working register), Code of Conduct 2025 – one well-made document at a time.</li>
-          <li>Tikanga held in the hui (karakia bookends, te reo throughout) and continuity strong – minutes, matters arising, next hui scheduled.</li>
-          <li>Whānau and community connection is the highest-rated area (pathways 4.17 / 5) – and the only one both halves of the board agree on.</li>
-          <li>A shared kaupapa: five of six trustees independently name the new marae build, with te reo alongside.</li>
+          <li><span class="m">✓</span><span>A thorough, well-structured 2018 legal foundation – nineteen Deed items clearly in place.</span></li>
+          <li><span class="m">✓</span><span>An active, recent policy build – Conflict of Interest 2024 (with a working register), Code of Conduct 2025 – one well-made document at a time.</span></li>
+          <li><span class="m">✓</span><span>Tikanga held in the hui – karakia opens and closes, te reo throughout – and continuity is strong: minutes, matters arising, the next hui scheduled.</span></li>
+          <li><span class="m">✓</span><span>Whānau and community connection is the highest-rated area (pathways to connect: 4.17 of 5) – and the only one both halves of the board agree on.</span></li>
+          <li><span class="m">✓</span><span>A shared kaupapa: five of six trustees independently name the new marae build, with te reo alongside – and the 2024/25 plan told one clear story about it.</span></li>
         </ul>
       </div>
-      <div class="col a">
-        <h4>↗ Areas to build</h4>
+      <div class="tierbox tier-a">
+        <h3>➤ Areas to build</h3>
         <ul>
-          <li>The money layer – who may decide and spend what, and reporting every trustee can see (a delegation policy is already in motion).</li>
-          <li>An agreed, tikanga-grounded way through disagreement – the survey's keystone.</li>
-          <li>Quorum and the people pipeline – hui already postponed, decisions waiting.</li>
-          <li>The two legal-duty policies (Health &amp; Safety, risk) and the meeting decision-and-action habits.</li>
-          <li>A held strategy rhythm so the planning wānanga's output doesn't go quiet.</li>
+          <li><span class="m">➤</span><span>The money: clear rules for who may decide and spend what, and reporting every trustee can see. A Financial Delegation Policy is already in motion.</span></li>
+          <li><span class="m">➤</span><span>An agreed, tikanga-grounded way through disagreement – the survey's most important single finding.</span></li>
+          <li><span class="m">➤</span><span>Quorum and the people pipeline – hui have already been postponed, with decisions left waiting.</span></li>
+          <li><span class="m">➤</span><span>The two policies the law expects – Health &amp; Safety and risk – and the meeting decision-and-action habits.</span></li>
+          <li><span class="m">➤</span><span>A strategy the board reviews rather than files away – measures, owners and a review rhythm, so the wānanga's output doesn't go quiet like the 2024/25 plan did.</span></li>
         </ul>
       </div>
-      <div class="col i">
-        <h4>🗣 To surface in interviews</h4>
+      <div class="tierbox tier-q">
+        <h3>🗣 To surface in interviews</h3>
         <ul>
-          <li>Why this board reads itself two ways – four trustees average 2.0–3.2, two sit above 4.2 – and it is not the usual newcomer pattern: the one new trustee is the lowest scorer.</li>
-          <li>What disagreement looks like in the room, and whether attendance decay is its symptom.</li>
-          <li>The delegation-and-mana tension around the financial policy in motion.</li>
-          <li>What financial reporting actually reaches trustees – a blind spot no lens has seen.</li>
-          <li>Whether the protections four trustees can't see exist on paper, or don't exist at all.</li>
+          <li><span class="m">?</span><span>Why this board reads itself two ways – four trustees average 2.0–3.2 while two sit above 4.2 – and it is not the usual newcomer pattern: the one new trustee is the lowest scorer.</span></li>
+          <li><span class="m">?</span><span>What disagreement looks like in the room, and whether falling attendance is one of its symptoms.</span></li>
+          <li><span class="m">?</span><span>The delegation-and-mana tension around the financial policy now in motion.</span></li>
+          <li><span class="m">?</span><span>What financial reporting actually reaches trustees – a blind spot no lens has seen.</span></li>
+          <li><span class="m">?</span><span>Whether the protections four trustees can't see exist on paper, or don't exist at all.</span></li>
         </ul>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section>
-    <h2 class="sec">Priority recommendations – two-lens merge</h2>
-    <p class="sec-note">Built from the doc-review and survey Top 10s. Each carries a label for how many lenses can currently see it. The interview lens will confirm, sharpen, or re-rank these.</p>
-    <div class="legend">
-      <span class="tag t-cert">Two-source certain</span>
-      <span class="tag t-two">Two-source</span>
-      <span class="tag t-doc">Doc-only</span>
-      <span class="tag t-survey">Survey-only</span>
+<section class="sec" id="sec-recs">
+  <div class="sec-head">
+    <h2><span class="reo" data-edit="text" data-field="reo 3" data-yaml="reo[2]">Kupu Tohutohu</span><span class="pipe">&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="eng">Top ten recommendations</span></h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 6" data-yaml="secdesc[5]">The merged list from the document and survey lenses</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
+    <p style="font-size:.93rem">Built from the document-review Top 10 and the survey Top 10, reconciled into one
+    list. Each card carries a label showing how many lenses can currently see it. The interview lens will confirm,
+    sharpen, or re-rank these.</p>
+    <div class="key">
+      <span class="badge b-cert">Two-source certain</span> – both the documents and the survey point the same way, strongly. The most reliable signals here.<br>
+      <span class="badge b-two" style="margin-top:6px">Two-source</span> – both lenses touch it, but more as coverage than a strong, convergent signal.<br>
+      <span class="badge b-doc" style="margin-top:6px">Doc-only</span> <span class="badge b-sur">Survey-only</span> – visible in just one lens; the card says why the other can't see it.<br>
+      <b>Nothing is fully triangulated yet – that needs the interviews.</b>
     </div>
-    <div class="keybox">
-      <div><b>Two-source certain</b> – both the documents and the survey point the same way, strongly. The most reliable signals here.</div>
-      <div><b>Two-source</b> – both lenses touch it, but more as coverage than a strong, convergent signal.</div>
-      <div><b>Doc-only / Survey-only</b> – visible in just one lens; the card says why the other can't see it.</div>
-      <div><b>Purple – facilitator call</b> – facilitator determination required: the evidence is genuinely torn between two bands; the facilitator makes this call, informed by the interviews. See the note under each purple item.</div>
-      <div style="margin-top:4px;color:var(--muted)">Nothing is fully triangulated yet – that needs the interviews.</div>
-    </div>
+    <div class="scorekey" data-edit="text" data-field="scorekey 1" data-yaml="scorekey[0]">Where two numbers appear on a score line: <b>all six</b> is the average across all six
+    trustees; <b>lower four</b> is the average from the four trustees who read the board low – Kim, Justina, PJ
+    and Marlene. The split is not about newness: the one new trustee is the lowest scorer.</div>
 
-    <div class="rec">
-      <div class="head"><span class="num">1</span><span class="ttl">Agree a working covenant – a tikanga-grounded way through disagreement</span>
-        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The Deed has no tikanga-based path through disagreement – its dispute clause only sends interpretation questions back to the trustees. The 2025 Code of Conduct carries named values and a breach process for conduct; disagreement more broadly has no agreed way through.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>The survey lens's keystone. "Effective process for conflict resolution when things get heated or tense" is ticked as missing by five of six trustees.<br>Managing disagreement &amp; tension – all six 3.00; critical four 2.25.<br>The Chair: "a lot of individualism, not working together, personality-driven decisions, little respect for each other." Kim asks for ways "to uplift one another instead of being obstructive."</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>★ What that individualism looks like in a hui (Justina). ★ What it looks like around the table, system-level (Kim). ★ What Mei has seen when the board disagrees – and why Josephine reads the same room at 5.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>A facilitated session – separate from a business hui – agreeing two or three written commitments: how disagreement is voiced, how decisions are owned once made, and what happens when the line is crossed. Reviewed at each hui.</div>
+    <details class="card">
+      <summary><span class="num">1</span><span class="ttl" data-edit="text" data-field="ttl 1" data-yaml="ttl[0]">Agree a working covenant – a tikanga-grounded way through disagreement</span><span class="badge b-cert">Two-source certain</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The Deed has no tikanga-based path through disagreement – its dispute clause only sends interpretation
+          questions back to the trustees. The 2025 Code of Conduct carries named values and a breach process for
+          conduct; disagreement more broadly has no agreed way through.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-red"></span><span>An "effective process for conflict resolution when things get heated or tense" is ticked as missing by five of six trustees.</span></li>
+            <li><span class="dot st-amber"></span><span>Managing disagreement &amp; tension – all six 3.00 · lower four 2.25.</span></li>
+            <li><span class="dot st-amber"></span><span>The Chair: "a lot of individualism, not working together, personality-driven decisions, little respect for each other." Kim asks for ways "to uplift one another instead of being obstructive."</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>What that individualism looks like in a hui (Justina). What it looks like around the table, at the
+          level of how the board works (Kim). What Mei has seen when the board disagrees – and why Josephine reads
+          the same room at 5.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>A facilitated session – separate from a business hui – agreeing two or three written commitments:
+          how disagreement is voiced, how decisions are owned once made, and what happens when the line is crossed.
+          Reviewed at each hui.</p></div>
       </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">2</span><span class="ttl">Finish the financial-authority layer – and make the money visible to every trustee</span>
-        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The document lens's keystone – six amber items across two reviews all point at who may decide and spend what, alone, between hui, and at committee level. The Deed's financial procedures are green and borrowing is controlled; a Financial Delegation Policy is already named on the May 2026 hui Meeting Agenda – the board is moving on this before being asked.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>Asked which financial processes the board maintains, the six trustees ticked between one and twelve options – six different pictures of the same bank account.<br>Reporting structures – all six 3.00; critical four 2.25.<br>The delegation tension is named by the Chair: trustees "may feel any changes impedes on their mana… as opposed to seeing this as a positive, more transparent move."</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>★ How the delegation-policy conversation is going (Justina). ★ Where the policy is at, and what Kim can actually see of the money. What trustees receive before a hui – budget versus actuals, paper or screen – a blind spot no lens has seen.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>At the hui that tables the Financial Delegation Policy, list the five biggest recurring decision types and record the sign-off each needs – plus a standing one-page financial snapshot at every hui, in hard copy as well as on screen.</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">3</span><span class="ttl">Restore quorum – trustee recruitment, attendance and shared commitment</span>
-        <span class="tags"><span class="tag t-survey">Survey-only</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The documents can't see this – attendance lives in minutes and practice, and no minutes reached this lens. What they do show: a trustee election and a vacancy live on the Meeting Agenda, and the replacement machinery (rotation, election, co-option) all in place.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>Carried by the trustees' own words. The Chair: "Not having enough trustees means we don't have a quorum at meetings and then decisions can't be made. We have had a number of unapproved events that were advertised."<br>Josephine: "Most organized hui have to be postponed due to not having a quorum."<br>"More attendance so that we have quorum" is ticked by four of six – including both high scorers. When the optimists and the critics tick the same box, trust it.</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>★ What is keeping the seats empty (Justina). ★ What happens to the mahi when a hui can't go ahead (Josephine). Whether attendance decay is partly a symptom of Rec #1.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>A frank stocktake at the next full hui: who is genuinely available for the role, what attendance commitment the kaupapa needs, and a recruitment approach for the gaps – paired with making meetings worth attending (Rec #1, Rec #4).</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">4</span><span class="ttl">Build the meeting rhythm – and lift the hui Meeting Agenda into a decision-and-action tool</span>
-        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The heaviest concentration of not-yet items in any single review: no action tracker, decisions unmarked (a trustee election and a vacancy among them), no correspondence log, no item times. The continuity habits are already strong – minutes, matters arising, next hui scheduled – so this is a template upgrade, not a culture change.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>Key milestones for the year aren't being mapped – all six 2.33; critical four 1.50 (red).<br>Trustees arriving prepared – all six 2.50; critical four 1.50 (provisional red).<br>Information before meetings – all six 2.67; critical four 2.00 (provisional red).<br>Action-tracking between hui – all six 2.83; critical four 2.00.<br>A clear agenda and better action-tracking are each ticked by four of six.</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>How the board keeps track of what it agreed to do (PJ). Where a decision gets written down and who carries the actions (Mei). What gets in the way of meetings progressing the mahi.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>At the next hui: capture three actions with owners and due dates and carry them forward as a standing item; tag each Meeting Agenda item Decision / Discussion / Information; papers out three days ahead.</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">5</span><span class="ttl">Stand up the two legal-duty policies – Health &amp; Safety and risk</span>
-        <span class="tags"><span class="tag t-cert">Two-source certain</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The only two compliance items not evident anywhere in what was provided. The board's duties under the Health and Safety at Work Act 2015 exist whether or not they are written down. The strength to build on: the Key Holder policy already manages one risk well – this board knows how to write a short, working policy.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>No robust process yet to manage risks – all six 2.33; critical four 1.50 (red).<br>Compliance risk is the most-named risk (four of six) – with a live instance recorded: events advertised without board approval.<br>The protections multi-select diverges sharply: the critical four tick almost none (Kim: none; the Chair: induction only) while Josephine ticks eight and Mei seven.</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>★ When something unsafe happens on the marae, how it reaches the board (PJ). Which risk worries PJ most. What protections Kim has seen, if any – her blank answer may mean none, or not knowing.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>One page each. Health &amp; Safety: the board's duty, a named portfolio-holder, how incidents reach the hui. Risk: the five biggest risks the board has already named, against what is currently done about each – reviewed at a standing line on the Meeting Agenda.</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">6</span><span class="ttl">Make strategy a held rhythm – a few owned, written priorities</span>
-        <span class="tags"><span class="tag t-purple">Purple – facilitator call</span></span><span class="chev">▶</span></div>
-      <div class="purple-note">
-        <div><span class="pl">Case for Two-source certain:</span> both lenses’ pre-registered conditions fired – the doc lens found no current plan (the Development Plan is optional in the Charter; the wānanga sits in general business), which is exactly the survey list’s promotion trigger; strategy-refinement is a provisional red (critical four 1.75).</div>
-        <div><span class="pl">Case for Two-source:</span> the survey itself banded strategy Moderate (#7 of its 10) – the all-board score (2.50) is not a full red, the aspiration item reads 3.83, and the low signal leans heavily on one voice: the Chair’s solitary 1 (Z3) against four colleagues’ 4s and 5s.</div>
-        <div><span class="pl">Interviews will settle →</span> ★ Justina: "What sits behind your 1 on ‘we know what we are aiming to achieve’?" · Mei: whether a written plan exists behind the build and the kura reo (AC7). If colleagues corroborate the Chair, certainty is earned; if not, this is coverage, not convergence.</div>
-      </div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>No current strategic plan reached this lens – the Charter provides for a Marae Development Plan but makes it optional ("may be prepared"), and the planning wānanga sits in general business on the hui Meeting Agenda. Strategy is acknowledged by both documents and held by neither.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>Strategy refined into a few key priorities – all six 2.50; critical four 1.75 (provisional red).<br>"Our board knows what we are aiming to achieve" – all six 3.83, but the Chair scored it 1 – the only 1 on that item, against four colleagues' 4s and 5s.<br>The kaupapa itself is shared: five of six independently name the new marae build, with te reo alongside. Kim: "We spread too thin and there are random and reactive behaviour."</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>★ What sits behind the Chair's solitary 1 on shared direction (Justina). Whether a written plan exists behind the build and the kura reo (Mei). Where strategic planning actually happens now.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>Treat the scheduled wānanga as the start of an annual rhythm: one page with the three priorities the survey already reveals (the build, te reo, governance basics), a kaitiaki per goal, and "Development Plan – progress" as a standing hui item.</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">7</span><span class="ttl">One home for governance documents – and the policy guidance around them</span>
-        <span class="tags"><span class="tag t-two">Two-source</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The documents exist and are well made – what the set lacks is consolidation: a Charter plus four standalone policies rather than a manual, with nine more touched-on policies not yet written up. Access itself is something the documents can't show – that half is survey-only.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>Easy access to key governance and Trust documents – all six 2.33; critical four 2.00 (red) – the survey's most unanimous low: nobody scored above 3, including both high scorers.<br>Guidance from policies &amp; constitutional documents – all six 2.50; again no score above 3.<br>A "document storage system" is ticked as missing by four of six. The seed exists: the Chair counts "starting a visible policy folder" among her proudest milestones.</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>When Kim needs a document, what happens. Whether the Constitution and the Trust Deed are one document or two (Justina) – the Charter names both.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>Pick one place – a physical folder plus a simple shared drive – inventory what exists, and agree that from the next hui every governance document lives there and nowhere else. Build on the policy folder already started.</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">8</span><span class="ttl">Build the continuity set – induction, board self-review, skills map, succession</span>
-        <span class="tags"><span class="tag t-two">Two-source</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The largest red cluster in the Charter &amp; Policy Set review: induction, board self-review and a skills matrix are absent; succession is handled only reactively (rotation and elections fill seats as they empty). On a portfolio-run board, an unplanned departure costs more than a seat.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>"Having more skilled governance thinking to problem-solve" is ticked by five of six.<br>The Chair names the structural cause: "trustees are nominated by whānau and then voted in. This means we don't always get the appropriate skills needed."<br>The newest trustee's read (personal average 2.04) is the live test of whether induction exists in practice. Skills asked for by name: financial skills, managing conflict, being a landlord.</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>Kim's first weeks – was there an induction, or anyone walking her through the documents? How the board could build skills once people are around the table (Justina). Which skills are missing most.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>An induction pack made of the documents the board has already written (Charter, the four policies, the Deed) plus a welcome conversation; and a 30-minute self-review at one hui a year, in which the board also names a possible next Chair.</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">9</span><span class="ttl">Write up the Chair and Secretary roles</span>
-        <span class="tags"><span class="tag t-two">Two-source</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>Both officer roles exist only as scattered Charter references – no consolidated position description, and no statement of what the Chair may decide alone between hui. The board has already shown how to do this well: the trustee-level role is green across the Charter and the Code of Conduct.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>The mana / responsibilities of each governance role clearly set out – all six 3.17; critical four 2.25 (the four lower scorers gave 2s and a 3; the high pair gave 5s).<br>"Better chairing of meetings" is ticked by two trustees – one being the Chair herself: constructive self-signal, not criticism of her.</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>Carried inside the other kōrero – if chairing comes up, frame it as support for the role, never assessment of the person holding it.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>One page per role: gather the existing Charter references for each, then add the two things usually left unwritten – a short duties list and any decision or spending limits (pointing to the Rec #2 paper for the numbers).</div>
-      </div>
-    </div>
-    <div class="rec">
-      <div class="head"><span class="num">10</span><span class="ttl">Strengthen the governance / operations line – charter the committees that carry the load</span>
-        <span class="tags"><span class="tag t-two">Two-source</span></span><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="row doc"><span class="lab">Document signal</span>The Charter already draws the line – day-to-day operations delegate to the Marae Committee – but the committees are named, not chartered: no Terms of Reference, no authority limits. A body carrying that much weight deserves one page saying what it may decide and where its authority ends.</div>
-        <div class="row survey"><span class="lab">Survey signal</span>Differentiating governance mahi from operational mahi – all six 3.00; critical four 2.25 (Kim scored it 1).<br>Every trustee ticked seven to ten operational activities the board carries itself – bookings, cleaning, contractors, repairs, day-to-day finances, events.<br>"Better delegation of operational matters" is ticked by four of six. Josephine's fix is in the data: "Encourage sub committees."</div>
-        <div class="row iv"><span class="lab">Interviews will test →</span>★ How the board and the Marae Committee fit together – what each one decides (Mei, the one person on both). What to hand to a sub-committee first (Josephine). How much board time goes to running things versus governing them.</div>
-        <div class="row start"><span class="lab">Resource-safe start</span>One page for the Marae Committee first – purpose, membership, scope, authority limits (linked to Rec #2), and meeting rhythm. Then hand one or two heavy operational loads to named whānau sub-committees – reporting to the board, not at it.</div>
-      </div>
-    </div>
+    </details>
 
-    <p class="sec-note" style="margin-top:16px"><b>Held for the synthesis (didn't make the merged 10, not lost):</b> starting the register of members and beneficiaries (doc-only – a live election and vacancy make it timely; the survey didn't ask); a five-yearly founding-documents review cycle sweeping the small Deed and Charter items (doc-only – both documents are 2018, and the Deed still cites the Trustee Act 1956); naming the marae's external media voice beyond the Facebook page (doc-only); and the technology-and-paper mix (survey-only – "better use of technology" is the only option all six ticked, yet the free text asks for hard copies and kanohi ki te kanohi; folded into the Rec #2 and Rec #4 starting points).</p>
-  </section>
+    <details class="card">
+      <summary><span class="num">2</span><span class="ttl" data-edit="text" data-field="ttl 2" data-yaml="ttl[1]">Finish the financial delegations – and make the money visible to every trustee</span><span class="badge b-cert">Two-source certain</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The document lens's most important finding – six amber items across two reviews all point at who may
+          decide and spend what: alone, between hui, and at committee level. The Deed's financial procedures are
+          sound and borrowing is controlled. A Financial Delegation Policy is already named on the May 2026 hui
+          Meeting Agenda – the board is moving on this before being asked.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-amber"></span><span>Asked which financial processes the board maintains, the six trustees ticked between one and twelve options – six different pictures of the same bank account.</span></li>
+            <li><span class="dot st-amber"></span><span>Reporting structures – all six 3.00 · lower four 2.25.</span></li>
+            <li><span class="dot st-amber"></span><span>The delegation tension is named by the Chair: trustees "may feel any changes impedes on their mana… as opposed to seeing this as a positive, more transparent move."</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>How the delegation-policy conversation is going (Justina). Where the policy is at, and what Kim can
+          actually see of the money. What trustees receive before a hui – budget against actual spending, paper or
+          screen – a blind spot no lens has seen.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>At the hui that tables the Financial Delegation Policy, list the five biggest recurring decision types
+          and record the sign-off each needs – plus a standing one-page financial snapshot at every hui, in hard
+          copy as well as on screen.</p></div>
+      </div>
+    </details>
 
-  <!-- RED FLAGS -->
-  <section>
-    <h2 class="sec sec-rf">Red flags</h2>
-    <p class="sec-note">A facilitator-orientation list – what's flagging now, off the documents and survey only. Likely, pending interviews.</p>
-    <div class="rf-note"><b>Likely, pending interviews.</b> These are preliminary signals, not settled conclusions. They are drawn from two lenses; the interviews will confirm, soften, or add to them. By design, they are <i>not</i> carried forward as fixed into the draft or client dashboard – those are rebuilt from the full three-lens synthesis. Where two numbers are shown, <b>all six</b> = the average across all six trustees, and <b>critical four</b> = the average from the four trustees who read the board low (Kim, Justina, PJ, Marlene). Survey red flags follow the standing method: an all-board item average below 2.5 / 5. <b>One calibration matters here:</b> the split between the four low readers and the two high scorers (Josephine, Mei) is <i>not</i> explained by newness – the one self-identified newcomer, Kim, is the lowest scorer, the inverse of the usual pattern. Two genuinely different experiences of the same board.</div>
+    <details class="card">
+      <summary><span class="num">3</span><span class="ttl" data-edit="text" data-field="ttl 3" data-yaml="ttl[2]">Restore quorum – trustee recruitment, attendance and shared commitment</span><span class="badge b-sur">Survey-only</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The documents can't see this – attendance lives in minutes and practice, and no minutes reached this
+          review. What they do show: a trustee election and a vacancy live on the Meeting Agenda, and the
+          replacement processes – rotation, election, co-option – all in place.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-red"></span><span>Carried by the trustees' own words. The Chair: "Not having enough trustees means we don't have a quorum at meetings and then decisions can't be made. We have had a number of unapproved events that were advertised."</span></li>
+            <li><span class="dot st-red"></span><span>Josephine: "Most organized hui have to be postponed due to not having a quorum."</span></li>
+            <li><span class="dot st-amber"></span><span>"More attendance so that we have quorum" is ticked by four of six – including both high scorers. When the optimists and the critics tick the same box, trust it.</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>What is keeping the seats empty (Justina). What happens to the mahi when a hui can't go ahead
+          (Josephine). Whether falling attendance is partly a symptom of Rec #1.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>A frank stocktake at the next full hui: who is genuinely available for the role, what attendance
+          commitment the kaupapa needs, and a recruitment approach for the gaps – paired with making meetings
+          worth attending (Rec #1, Rec #4).</p></div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="num">4</span><span class="ttl" data-edit="text" data-field="ttl 4" data-yaml="ttl[3]">Build the meeting rhythm – and lift the hui Meeting Agenda into a decision-and-action tool</span><span class="badge b-cert">Two-source certain</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The heaviest concentration of not-yet items in any single review: no action tracker, decisions not
+          marked (a trustee election and a vacancy among them), no correspondence log, no item times. The
+          continuity habits are already strong – minutes, matters arising, the next hui scheduled – so this is a
+          template upgrade, not a culture change.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-red"></span><span>The key milestones for the year aren't being mapped – all six 2.33 · lower four 1.50.</span></li>
+            <li><span class="dot st-likely"></span><span>Trustees aren't arriving at meetings prepared – lower four 1.50 · all six 2.50 (likely red).</span></li>
+            <li><span class="dot st-likely"></span><span>Information isn't reaching trustees before meetings – lower four 2.00 · all six 2.67 (likely red).</span></li>
+            <li><span class="dot st-amber"></span><span>Action-tracking between hui – lower four 2.00 · all six 2.83.</span></li>
+            <li><span class="dot st-amber"></span><span>A clear Meeting Agenda and better action-tracking are each ticked by four of six.</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>How the board keeps track of what it agreed to do (PJ). Where a decision gets written down and who
+          carries the actions (Mei). What gets in the way of meetings progressing the mahi.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>At the next hui: capture three actions with owners and due dates, and carry them forward as a standing
+          item. Tag each Meeting Agenda item Decision / Discussion / Information. Papers out three days ahead.</p></div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="num">5</span><span class="ttl" data-edit="text" data-field="ttl 5" data-yaml="ttl[4]">Stand up the two legal-duty policies – Health &amp; Safety and risk</span><span class="badge b-cert">Two-source certain</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The only two compliance items not evident anywhere in what was provided. The board's duties under the
+          Health and Safety at Work Act 2015 exist whether or not they are written down. The strength to build on:
+          the Key Holder Policy already manages one risk well – this board knows how to write a short, working
+          policy.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-red"></span><span>No robust process yet to manage risks – all six 2.33 · lower four 1.50.</span></li>
+            <li><span class="dot st-amber"></span><span>Compliance risk is the most-named risk (four of six) – with a live instance recorded: events advertised without board approval.</span></li>
+            <li><span class="dot st-amber"></span><span>The protections tick-boxes diverge sharply: Kim ticks none, the Chair an induction process only, PJ expenditure controls only, Marlene four – while Josephine ticks eight and Mei seven.</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>When something unsafe happens on the marae, how it reaches the board (PJ). Which risk worries PJ most.
+          What protections Kim has seen, if any – her blank answer may mean none, or not knowing.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>One page each. Health &amp; Safety: the board's duty, a named portfolio-holder, how incidents reach the
+          hui. Risk: the five biggest risks the board has already named, against what is currently done about each –
+          reviewed at a standing line on the Meeting Agenda.</p></div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="num">6</span><span class="ttl" data-edit="text" data-field="ttl 6" data-yaml="ttl[5]">Make strategy a held rhythm – a few owned, measurable priorities</span><span class="badge b-cert">Two-source certain</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The 2024/25 Strategic Plan – reviewed since V1 of this dashboard – is strong on direction: vision,
+          values and priorities tell one clear story about te reo. What it lacks is the part a board governs with.
+          Key outcomes are not measurable, no goal has a named owner, and no review process is described – the
+          board could not tell from the plan whether the strategy was working. Its 24-month term has ended, the
+          Charter still makes the Marae Development Plan optional ("may be prepared"), and the refresh currently
+          sits as one line in general business on the hui Meeting Agenda.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-likely"></span><span>Strategy refined into a few key priorities – lower four 1.75 · all six 2.50 (likely red).</span></li>
+            <li><span class="dot st-amber"></span><span>"Our board knows what we are aiming to achieve" – all six 3.83, but the Chair scored it 1 – the only 1 on that item, against five colleagues' 4s and 5s.</span></li>
+            <li><span class="dot st-green"></span><span>The kaupapa itself is shared: five of six independently name the new marae build, with te reo alongside. Kim: "We spread too thin and there are random and reactive behaviour."</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>What sits behind the Chair's solitary 1 on shared direction (Justina). How the 2024/25 plan was
+          actually used at the board table – and what the refresh needs to keep or change (Mei). Where strategic
+          planning happens now.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>Treat the scheduled wānanga as the start of an annual rhythm, and give the next plan the three things
+          the 2024/25 plan lacked: one measurable target per priority, a named owner per goal, and "Development
+          Plan – progress" as a standing hui item reviewed at least every six months.</p></div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="num">7</span><span class="ttl" data-edit="text" data-field="ttl 7" data-yaml="ttl[6]">One home for governance documents – and the policy guidance around them</span><span class="badge b-two">Two-source</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The documents exist and are well made – what the set lacks is one home for them: a Charter plus four
+          standalone policies rather than a Governance Manual, with nine more touched-on policies not yet written
+          up. Access itself is something the documents can't show – that half of the picture is survey-only.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-red"></span><span>Easy access to key governance and Trust documents isn't there yet – all six 2.33 · lower four 2.00. The survey's most unanimous low: nobody scored above 3, including both high scorers.</span></li>
+            <li><span class="dot st-amber"></span><span>Guidance from policies &amp; constitutional documents – all six 2.50 · lower four 2.25 – again, no score above 3.</span></li>
+            <li><span class="dot st-amber"></span><span>A "document storage system" is ticked as missing by four of six. The seed exists: the Chair counts "starting a visible policy folder" among her proudest milestones.</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>When Kim needs a document, what happens. Whether the Constitution and the Trust Deed are one document
+          or two (Justina) – the Charter names both.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>Pick one place – a physical folder plus a simple shared drive – take stock of what exists, and agree
+          that from the next hui every governance document lives there and nowhere else. Build on the policy folder
+          already started.</p></div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="num">8</span><span class="ttl" data-edit="text" data-field="ttl 8" data-yaml="ttl[7]">Build the continuity basics – induction, board self-review, a skills map, succession</span><span class="badge b-two">Two-source</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The largest cluster of gaps in the Charter &amp; Policy Set review: induction, board self-review and a
+          skills matrix are absent, and succession is handled only reactively – rotation and elections fill seats
+          as they empty. On a portfolio-run board, an unplanned departure costs more than a seat.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-amber"></span><span>"Having more skilled governance thinking to problem-solve" is ticked by five of six.</span></li>
+            <li><span class="dot st-amber"></span><span>The Chair names the structural cause: "trustees are nominated by whānau and then voted in. This means we don't always get the appropriate skills needed."</span></li>
+            <li><span class="dot st-amber"></span><span>The newest trustee's read (personal average 2.04 of 5) is the live test of whether induction exists in practice. Skills asked for by name: financial skills, managing conflict, being a landlord.</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>Kim's first weeks – was there an induction, or anyone walking her through the documents? How the board
+          could build skills once people are around the table (Justina). Which skills are missing most.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>An induction pack made of the documents the board has already written – the Charter, the four
+          policies, the Deed – plus a welcome conversation. And a 30-minute self-review at one hui a year, in
+          which the board also names a possible next Chair.</p></div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="num">9</span><span class="ttl" data-edit="text" data-field="ttl 9" data-yaml="ttl[8]">Write up the Chair and Secretary roles</span><span class="badge b-two">Two-source</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>Both officer roles exist only as scattered Charter references – no consolidated position description,
+          and no statement of what the Chair may decide alone between hui. The board has already shown how to do
+          this well: the trustee-level role is clearly described across the Charter and the Code of Conduct.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-amber"></span><span>The mana / responsibilities of each governance role clearly set out – all six 3.17 · lower four 2.25. The four lower scorers gave 2s and a 3; the high pair gave 5s.</span></li>
+            <li><span class="dot st-amber"></span><span>"Better chairing of meetings" is ticked by two trustees – one being the Chair herself: a constructive self-signal, not criticism of her.</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>Carried inside the other kōrero – if chairing comes up, frame it as support for the role, never
+          assessment of the person holding it.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>One page per role: gather the existing Charter references for each, then add the two things usually
+          left unwritten – a short duties list, and any decision or spending limits (pointing to the Rec #2 paper
+          for the numbers).</p></div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary><span class="num">10</span><span class="ttl" data-edit="text" data-field="ttl 10" data-yaml="ttl[9]">Strengthen the governance / operations line – give the committees their own Terms of Reference</span><span class="badge b-two">Two-source</span><span class="arrow">▶</span></summary>
+      <div class="card-body">
+        <div class="fld"><div class="flab">📄 Document signal</div>
+          <p>The Charter already draws the line – day-to-day operations delegate to the Marae Committee – but the
+          committees are named, not chartered: no Terms of Reference, no authority limits. A body carrying that
+          much weight deserves one page saying what it may decide and where its authority ends.</p></div>
+        <div class="fld"><div class="flab">📊 Survey signal</div>
+          <ul>
+            <li><span class="dot st-amber"></span><span>Differentiating governance mahi from operational mahi – all six 3.00 · lower four 2.25. Kim scored it 1.</span></li>
+            <li><span class="dot st-amber"></span><span>Five of six trustees ticked seven to ten operational activities the board carries itself – bookings, cleaning, contractors, repairs, day-to-day finances, events. The Chair left the question blank.</span></li>
+            <li><span class="dot st-amber"></span><span>"Better delegation of operational matters" is ticked by four of six. Josephine's fix is in the data: "Encourage sub committees."</span></li>
+          </ul></div>
+        <div class="fld"><div class="flab">🗣 Interviews will test</div>
+          <p>How the board and the Marae Committee fit together – what each one decides (Mei, the one person on
+          both). What to hand to a sub-committee first (Josephine). How much board time goes to running things
+          against governing them.</p></div>
+        <div class="fld"><div class="flab">A practical starting point</div>
+          <p>One page for the Marae Committee first – purpose, membership, scope, authority limits (linked to
+          Rec #2), and meeting rhythm. Then hand one or two heavy operational loads to named whānau sub-committees –
+          reporting to the board, not at it.</p></div>
+      </div>
+    </details>
+
+    <p style="font-size:.92rem;margin-top:14px"><b>Held for the synthesis</b> (didn't make the merged ten, not
+    lost): starting the register of members and beneficiaries (doc-only – a live election and a vacancy make it
+    timely; the survey didn't ask). A five-yearly founding-documents review cycle to sweep the small Deed and
+    Charter items (doc-only – both documents are from 2018, and the Deed still cites the Trustee Act 1956).
+    Naming the marae's external media voice beyond the Facebook page (doc-only). And the technology-and-paper
+    mix (survey-only – "better use of technology" is the only option all six ticked, yet the written answers ask
+    for hard copies and kanohi ki te kanohi; folded into the Rec #2 and Rec #4 starting points).</p>
+  </div>
+</section>
+
+<section class="sec" id="sec-redflags">
+  <div class="sec-head">
+    <h2><span class="reo" data-edit="text" data-field="reo 4" data-yaml="reo[3]">Ngā Take Matua</span><span class="pipe">&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="eng">Red flags</span></h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 7" data-yaml="secdesc[6]">What is flagging now – likely, pending interviews</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
+    <p style="font-size:.93rem"><b>Likely, pending interviews.</b> These are preliminary signals, not settled
+    conclusions. They are drawn from two lenses; the interviews will confirm, soften, or add to them. By design
+    they are <b>not</b> carried forward as fixed into the draft or client dashboard – those are rebuilt from the
+    full three-lens synthesis. Survey red flags follow the standing method: an item averaging below 2.5 of 5
+    across the whole board.</p>
+    <div class="scorekey" data-edit="text" data-field="scorekey 2" data-yaml="scorekey[1]"><b>All six</b> = the average across all six trustees. <b>Lower four</b> = the average
+    from the four trustees who read the board low – Kim, Justina, PJ and Marlene. One calibration matters here:
+    this split is <b>not</b> explained by newness. The one self-identified newcomer, Kim, is the lowest scorer –
+    the inverse of the usual pattern. These are two genuinely different experiences of the same board.</div>
 
     <div class="rf-group">
-      <h4><span class="swatch sr"></span> Survey red flags – scored items below 2.5 / 5 across the whole board</h4>
-      <p class="gsub">The full list, grouped by where the weakness sits.</p>
-
-      <div class="rf-sub">Documents &amp; systems</div>
-      <div class="rf">Easy access to key governance and Trust documents isn't there yet – also the survey's most unanimous low: nobody scored above 3. <span class="score">all six 2.33 · critical four 2.00</span></div>
-      <div class="rf">The key milestones for the year aren't being mapped. <span class="score">all six 2.33 · critical four 1.50</span></div>
-
-      <div class="rf-sub">Risk</div>
-      <div class="rf">No robust process to manage the risks the board itself names. <span class="score">all six 2.33 · critical four 1.50</span></div>
-
-      <p class="gsub" style="margin-top:10px"><b>Borderline:</b> "Sufficient guidance provided by policies and our constitutional documents" sits exactly on the 2.5 line (all six 2.50 · critical four 2.25) with unusual whole-board agreement – no trustee scored it above 3. It misses the threshold by a hair and is carried in Rec #7.</p>
+      <h3>Survey red flags – items below 2.5 of 5 across the whole board</h3>
+      <p style="font-size:.88rem;margin-top:0">The full list, grouped by where the weakness sits.</p>
+      <div class="rf" data-edit="text" data-field="rf 1" data-yaml="rf[0]"><span class="dot st-red"></span><span><b>Documents &amp; systems.</b> Easy access to key governance and Trust documents isn't there yet – also the survey's most unanimous low: nobody scored above 3.</span><span class="sc">all six 2.33 · lower four 2.00</span></div>
+      <div class="rf" data-edit="text" data-field="rf 2" data-yaml="rf[1]"><span class="dot st-red"></span><span><b>Documents &amp; systems.</b> The key milestones for the year aren't being mapped.</span><span class="sc">all six 2.33 · lower four 1.50</span></div>
+      <div class="rf" data-edit="text" data-field="rf 3" data-yaml="rf[2]"><span class="dot st-red"></span><span><b>Risk.</b> No robust process to manage the risks the board itself names.</span><span class="sc">all six 2.33 · lower four 1.50</span></div>
+      <div class="rf" data-edit="text" data-field="rf 4" data-yaml="rf[3]"><span class="dot st-amber"></span><span><b>Borderline.</b> "Sufficient guidance provided by policies and our constitutional documents" sits exactly on the 2.5 line, with unusual whole-board agreement – no trustee scored it above 3. It misses the threshold by a hair and is carried in Rec #7.</span><span class="sc">all six 2.50 · lower four 2.25</span></div>
     </div>
 
     <div class="rf-group">
-      <h4><span class="swatch sl"></span> Provisional red flags – red on the critical four, lifted over the line by the two high scorers</h4>
-      <p class="gsub">Each of these would be a <b>full red flag on the four lower-scoring trustees' reads</b>, but the two high scorers lift the all-board average just over the 2.5 line. Unlike the usual pattern, the high pair are <b>not</b> confirmed newcomers – so these reflect a four-of-six majority experience, not newcomer optimism. Treat as red, pending interview confirmation: the interviews must test which read is right.</p>
-      <div class="rf likely"><span><span class="likelytag">Provisional</span>Trustees aren't arriving at meetings prepared.</span> <span class="score">critical four 1.50 → all six 2.50</span></div>
-      <div class="rf likely"><span><span class="likelytag">Provisional</span>Strategy hasn't been refined into a few key priorities.</span> <span class="score">critical four 1.75 → all six 2.50</span></div>
-      <div class="rf likely"><span><span class="likelytag">Provisional</span>Information isn't reaching trustees before meetings.</span> <span class="score">critical four 2.00 → all six 2.67</span></div>
-      <div class="rf likely"><span><span class="likelytag">Provisional</span>Action-tracking between hui isn't holding (sits just above the usual window – borderline).</span> <span class="score">critical four 2.00 → all six 2.83</span></div>
+      <h3>Likely red flags – red on the lower four, lifted over the line by the two high scorers</h3>
+      <p style="font-size:.88rem;margin-top:0">Each of these would be a full red flag on the four lower-scoring
+      trustees' reads, but the two high scorers lift the all-board average just over the 2.5 line. Unlike the
+      usual pattern, the high pair are <b>not</b> newcomers – so these reflect a four-of-six majority experience,
+      not newcomer optimism. Treat as red, pending interview confirmation: the interviews must test which read
+      is right.</p>
+      <div class="rf" data-edit="text" data-field="rf 5" data-yaml="rf[4]"><span class="lk">Likely</span><span>Trustees aren't arriving at meetings prepared.</span><span class="sc">lower four 1.50 → all six 2.50</span></div>
+      <div class="rf" data-edit="text" data-field="rf 6" data-yaml="rf[5]"><span class="lk">Likely</span><span>Strategy hasn't been refined into a few key priorities.</span><span class="sc">lower four 1.75 → all six 2.50</span></div>
+      <div class="rf" data-edit="text" data-field="rf 7" data-yaml="rf[6]"><span class="lk">Likely</span><span>Information isn't reaching trustees before meetings.</span><span class="sc">lower four 2.00 → all six 2.67</span></div>
+      <div class="rf" data-edit="text" data-field="rf 8" data-yaml="rf[7]"><span class="lk">Likely</span><span>Action-tracking between hui isn't holding (sits just above the usual window – borderline).</span><span class="sc">lower four 2.00 → all six 2.83</span></div>
     </div>
 
     <div class="rf-group">
-      <h4><span class="swatch sa"></span> Multi-select gaps</h4>
-      <p class="gsub">Tick-box answers that point to a gap – an option almost no-one selected, or one where most trustees say "not in place" while only one or two say it is.</p>
-      <div class="rf ms"><span>An <b>effective process for conflict resolution</b> "when things get heated or tense" is ticked as missing by five of six trustees – the second-most-ticked gap in the survey. <span class="cell">(P2–P5, P7)</span></span></div>
-      <div class="rf ms"><span><b>"More attendance so that we have quorum"</b> is ticked by four of six – including both high scorers. A quorum risk in the trustees' own words. <span class="cell">(P2, P3, P6, P7)</span></span></div>
-      <div class="rf ms"><span><b>"Having more skilled governance thinking to problem-solve"</b> is ticked by five of six. <span class="cell">(P2–P5, P7)</span></span></div>
-      <div class="rf ms"><span>A <b>document storage system</b> is ticked as missing by four of six. <span class="cell">(P3–P5, P7)</span></span></div>
-      <div class="rf ms"><span>Asked what <b>protections for the future</b> exist, the critical four tick almost none – Kim none at all, the Chair an induction process only, PJ expenditure controls only – while Josephine ticks eight and Mei seven. The board does not share a view of what protections exist. <span class="cell">(Y2–Y7)</span></span></div>
-      <div class="rf ms"><span>The <b>financial processes</b> ticks range from one (Kim – two-signatory approval only) to twelve (Mei) – six different pictures of the same bank account. <span class="cell">(AL2–AL7)</span></span></div>
-      <div class="rf ms"><span>The Chair ticked <b>none</b> of the twelve governance responsibilities as consistently fulfilled; Kim ticked one (board meetings). <b>Risk Management</b> was ticked only by the two high scorers. <span class="cell">(G2–G7)</span></span></div>
-      <div class="rf ms"><span><b>"Better use of technology for our board meetings"</b> is the only option ticked by all six – read alongside the free text asking for hard copies and kanohi ki te kanohi: the ask is information that reaches everyone, not more screens. <span class="cell">(P2–P7; W6, Q6)</span></span></div>
+      <h3>Tick-box gaps</h3>
+      <p style="font-size:.88rem;margin-top:0">Tick-box answers that point to a gap – an option almost no-one
+      selected, or one where most trustees say "not in place" while only one or two say it is. Cell references
+      point back to the survey spreadsheet for a deeper look.</p>
+      <div class="rf" data-edit="text" data-field="rf 9" data-yaml="rf[8]"><span class="dot st-red"></span><span>An <b>effective process for conflict resolution</b> "when things get heated or tense" is ticked as missing by five of six trustees – the second-most-ticked gap in the survey. <span class="cellref">(P2–P5, P7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 10" data-yaml="rf[9]"><span class="dot st-red"></span><span><b>"More attendance so that we have quorum"</b> is ticked by four of six – including both high scorers. A quorum risk in the trustees' own words. <span class="cellref">(P2, P3, P6, P7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 11" data-yaml="rf[10]"><span class="dot st-amber"></span><span><b>"Having more skilled governance thinking to problem-solve"</b> is ticked by five of six. <span class="cellref">(P2–P5, P7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 12" data-yaml="rf[11]"><span class="dot st-amber"></span><span>A <b>document storage system</b> is ticked as missing by four of six. <span class="cellref">(P3–P5, P7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 13" data-yaml="rf[12]"><span class="dot st-red"></span><span>Asked what <b>protections for the future</b> exist: Kim ticks none, the Chair an induction process only, PJ expenditure controls only, and Marlene four – while Josephine ticks eight and Mei seven. The board does not share a view of what protections exist. <span class="cellref">(Y2–Y7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 14" data-yaml="rf[13]"><span class="dot st-amber"></span><span>The <b>financial processes</b> ticks range from one (Kim – two-signatory approval only) to twelve (Mei) – six different pictures of the same bank account. <span class="cellref">(AL2–AL7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 15" data-yaml="rf[14]"><span class="dot st-red"></span><span>The Chair ticked <b>none</b> of the twelve governance responsibilities as consistently fulfilled; Kim ticked one (board meetings). <b>Risk Management</b> was ticked only by the two high scorers. <span class="cellref">(G2–G7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 16" data-yaml="rf[15]"><span class="dot st-amber"></span><span><b>"Better use of technology for our board meetings"</b> is the only option ticked by all six – read alongside the written answers asking for hard copies and kanohi ki te kanohi: the ask is information that reaches everyone, not more screens. <span class="cellref">(P2–P7; W6, Q6)</span></span></div>
     </div>
 
     <div class="rf-group">
-      <h4><span class="swatch" style="background:var(--plum)"></span> Lack of consensus (long-answer responses)</h4>
-      <p class="gsub">Free-text answers where trustees appear to be working from materially different maps. Surfaced for the facilitator to probe – who differs, and where to look.</p>
-      <div class="rf la"><span><b>No shared verdict on the board's state.</b> Asked for an outside observer's opinion: Marlene – "move slow"; Kim – "the board is struggling to operate"; PJ – "the Board is doing alright"; Justina – "we have a great governance structure and processes" (though her scores, second-lowest on the board, read otherwise); Mei – "Tau ana." The board does not share a story about itself. <span class="cell">(AT2–AT7)</span></span></div>
-      <div class="rf la"><span><b>Different maps of what to prioritise next.</b> Justina: internal processes, financial literacy, policy and security; PJ: the wharenui and being good landlords; Josephine: concentrating on the people of the marae and communications. The build itself is shared ground – the divergence is over what comes with it. <span class="cell">(AE3, AE4, AE6; AC2–AC7)</span></span></div>
-      <div class="rf la"><span><b>Two reads of the board–operations relationship.</b> The widest-spread scored item in the survey: Justina and Kim scored it 1; Marlene and Josephine scored it 5. <span class="cell">(AJ2–AJ7)</span></span></div>
+      <h3>Where the written answers disagree</h3>
+      <p style="font-size:.88rem;margin-top:0">Written answers where trustees appear to be working from materially
+      different maps. Surfaced for the facilitator to probe – who differs, and where to look.</p>
+      <div class="rf" data-edit="text" data-field="rf 17" data-yaml="rf[16]"><span class="dot st-red"></span><span><b>No shared verdict on the board's state.</b> Asked for an outside observer's opinion: Marlene – "move slow"; Kim – "the board is struggling to operate"; PJ – "the Board is doing alright"; Justina – "we have a great governance structure and processes" (though her scores, second-lowest on the board, read otherwise); Mei – "Tau ana." The board does not share a story about itself. <span class="cellref">(AT2–AT7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 18" data-yaml="rf[17]"><span class="dot st-amber"></span><span><b>Different maps of what to prioritise next.</b> Justina: internal processes, financial literacy, policy and security. PJ: the wharenui and being good landlords. Josephine: concentrating on the people of the marae and communications. The build itself is shared ground – the divergence is over what comes with it. <span class="cellref">(AE3, AE4, AE6; AC2–AC7)</span></span></div>
+      <div class="rf" data-edit="text" data-field="rf 19" data-yaml="rf[18]"><span class="dot st-amber"></span><span><b>Two reads of the board–operations relationship.</b> The widest-spread scored item in the survey: Justina and Kim scored it 1; Marlene and Josephine scored it 5. <span class="cellref">(AJ2–AJ7)</span></span></div>
     </div>
 
     <div class="rf-group">
-      <h4><span class="swatch" style="background:#33597a"></span> Document red flags</h4>
-      <p class="gsub">Governance controls not yet evidenced in what was provided. (Absence of a consolidated governance manual, an Annual Budget document, or a full board pack is <i>not</i> flagged – not-yet-built or not-yet-seen, never poor.)</p>
-      <div class="rf doc"><span>No Health &amp; Safety policy anywhere in the set – the board's duties under the Health and Safety at Work Act 2015 exist whether or not they are written down.</span></div>
-      <div class="rf doc"><span>No risk management policy, framework or register – individual policies manage one risk each (conflicts, keys); nothing surfaces risk across the marae.</span></div>
-      <div class="rf doc"><span>No tikanga-based dispute-resolution path in the Deed – the dispute clause sends interpretation questions back to the trustees; there is no people-level way through.</span></div>
-      <div class="rf doc"><span>The financial-authority layer is unfinished – who may decide and spend what, alone, between hui, and at committee level (six amber items across two reviews; a Financial Delegation Policy is already on the hui Meeting Agenda).</span></div>
-      <div class="rf doc"><span>No induction, board self-review or skills matrix – and succession only reactive – on a board already short of quorum.</span></div>
-      <div class="rf doc"><span>No register of members and beneficiaries – with a live trustee election and a vacancy on the Meeting Agenda, knowing who may stand and who may vote rests on it.</span></div>
-      <div class="rf doc"><span>On the Meeting Agendas: decisions sit unmarked (the election and the vacancy among them) and there is no action tracker carrying mahi between hui.</span></div>
+      <h3>Document red flags</h3>
+      <p style="font-size:.88rem;margin-top:0">Governance controls not yet evidenced in what was provided. Absence
+      of a consolidated Governance Manual, an Annual Budget document, or a full Board Pack is <b>not</b> flagged –
+      not-yet-built or not-yet-seen, never poor.</p>
+      <div class="rf" data-edit="text" data-field="rf 20" data-yaml="rf[19]"><span class="dot st-red"></span><span>No Health &amp; Safety policy anywhere in the set – the board's duties under the Health and Safety at Work Act 2015 exist whether or not they are written down.</span></div>
+      <div class="rf" data-edit="text" data-field="rf 21" data-yaml="rf[20]"><span class="dot st-red"></span><span>No risk management policy, framework or register – individual policies manage one risk each (conflicts, keys); nothing surfaces risk across the marae.</span></div>
+      <div class="rf" data-edit="text" data-field="rf 22" data-yaml="rf[21]"><span class="dot st-red"></span><span>No tikanga-based dispute-resolution path in the Deed – the dispute clause sends interpretation questions back to the trustees; there is no people-level way through.</span></div>
+      <div class="rf" data-edit="text" data-field="rf 23" data-yaml="rf[22]"><span class="dot st-red"></span><span>The financial delegations are unfinished – who may decide and spend what, alone, between hui, and at committee level (six amber items across two reviews; a Financial Delegation Policy is already on the hui Meeting Agenda).</span></div>
+      <div class="rf" data-edit="text" data-field="rf 24" data-yaml="rf[23]"><span class="dot st-red"></span><span>No induction, board self-review or skills matrix – and succession only reactive – on a board already short of quorum.</span></div>
+      <div class="rf" data-edit="text" data-field="rf 25" data-yaml="rf[24]"><span class="dot st-red"></span><span>No register of members and beneficiaries – with a live trustee election and a vacancy on the Meeting Agenda, knowing who may stand and who may vote rests on it.</span></div>
+      <div class="rf" data-edit="text" data-field="rf 26" data-yaml="rf[25]"><span class="dot st-red"></span><span>The 2024/25 Strategic Plan carried no success measures, named owners or review process – the board could not tell from the plan whether the strategy was working. Carried in Rec #6 for the refresh.</span></div>
+      <div class="rf" data-edit="text" data-field="rf 27" data-yaml="rf[26]"><span class="dot st-red"></span><span>On the Meeting Agendas: decisions sit unmarked (the election and the vacancy among them) and there is no action tracker carrying mahi between hui.</span></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- DIMENSIONS -->
-  <section>
-    <h2 class="sec">By whare component</h2>
-    <p class="sec-note">Shown in whare order, top to bottom. Each dimension shows the strength first, then what each lens sees, then what the kōrero needs to test. Dots: <span class="swatch sg"></span>strong &nbsp; <span class="swatch sa"></span>building &nbsp; <span class="swatch sgr"></span>not yet built (not scored) &nbsp; <span class="swatch sr"></span>red (a full survey red sits here) &nbsp; <span class="swatch sl"></span>provisional red (red on the critical four, lifted over the line by the two high scorers) &nbsp; <span class="swatch sp"></span>purple – facilitator determination required: the evidence is genuinely torn between two bands; the facilitator makes this call, informed by the interviews. See the note under each purple item. Where two numbers appear, <b>all six</b> = the average across all six trustees; <b>critical four</b> = the average from the four trustees who read the board low (Kim, Justina, PJ, Marlene – the split is not tenure-driven).</p>
+<section class="sec" id="sec-whare">
+  <div class="sec-head">
+    <h2><span class="reo" data-edit="text" data-field="reo 5" data-yaml="reo[4]">Te Whare Tūpuna</span><span class="pipe">&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="eng">The eight components</span></h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 8" data-yaml="secdesc[7]">Each dimension: strength first, then what each lens sees</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
+    <p style="font-size:.93rem">Shown in whare order, top to bottom. Each dimension shows the strength first,
+    then what each lens sees, then what the kōrero needs to test. Dots:
+    <span class="dot st-green"></span>strong ·
+    <span class="dot st-amber"></span>building ·
+    <span class="dot st-grey"></span>not yet built (not scored) ·
+    <span class="dot st-red"></span>red (a full survey red sits here) ·
+    <span class="dot st-likely"></span>likely red (red on the lower four, lifted over the line by the two high
+    scorers). <b>All six</b> = the average across all six trustees; <b>lower four</b> = the average from the four
+    trustees who read the board low – Kim, Justina, PJ and Marlene. The split is not about newness.</p>
 
-    <div class="dim">
-      <div class="head"><span class="dot amber"></span><div class="names"><span class="te">TŪĀPAPA</span> <span class="en">Strong Foundations</span></div>
-        <div class="oneliner">A strong Deed and Charter; dispute resolution and policy guidance are the soft spots.</div><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> The 2018 Deed is a thorough, well-structured legal foundation – nineteen items clearly in place – and the Code of Conduct grounds trusteeship in named values (rangatiratanga, kotahitanga, kaitiakitanga, manaakitanga, whanaungatanga, wairuatanga).</div>
+    <details class="dim">
+      <summary><span class="dot st-amber"></span><span class="dh"><span class="dt">Tūāpapa</span> <span class="de">· Strong Foundations</span>
+        <span class="one" data-edit="text" data-field="one 1" data-yaml="one[0]">A strong Deed and Charter; dispute resolution and policy guidance are the soft spots.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> The 2018 Deed is a thorough, well-structured legal foundation –
+        nineteen items clearly in place – and the Code of Conduct grounds trusteeship in named values:
+        rangatiratanga, kotahitanga, kaitiakitanga, manaakitanga, whanaungatanga, wairuatanga.</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>Not evident in the Deed: a tikanga-based dispute-resolution path, a register of members, the background and origin of the Trust.</li><li>Several Deed ambers are already answered by the newer policies – the 2024 Conflict of Interest policy actioned the Deed review's own first recommendation.</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li>Values &amp; tikanga integrated into governance – all six 3.33; critical four 3.00.</li>
-            <li>Guidance from policies &amp; constitutional documents – a soft spot – all six 2.50; critical four 2.25 (no trustee scored above 3).</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-amber"></span><span>Not evident in the Deed: a tikanga-based dispute-resolution path, a register of members, the background and origin of the Trust.</span></li>
+            <li><span class="dot st-green"></span><span>Several Deed gaps are already answered by the newer policies – the 2024 Conflict of Interest Policy actioned the Deed review's own first recommendation.</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-amber"></span><span>Values &amp; tikanga integrated into governance – all six 3.33 · lower four 3.00.</span></li>
+            <li><span class="dot st-amber"></span><span>Guidance from policies &amp; constitutional documents – a soft spot – all six 2.50 · lower four 2.25. No trustee scored above 3.</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>Whether the Constitution and the Trust Deed are one document or two (the Charter names both).</li><li>What a tikanga-grounded way through disagreement would look like here.</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> Whether the Constitution and the Trust Deed are one
+        document or two (the Charter names both). What a tikanga-grounded way through disagreement would look
+        like here.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="dim">
-      <div class="head"><span class="dot purple"></span><div class="names"><span class="te">TEKOTEKO</span> <span class="en">Effective Leadership</span></div>
-        <div class="oneliner">The trustee role is well described; quorum and the skills pipeline are live.</div><span class="chev">▶</span></div>
-      <div class="purple-note">
-        <div><span class="pl">Case for amber:</span> the trustee role is well held on paper – Charter s8 and the 2025 Code of Conduct are green – and no scored red sits here: role clarity all six 3.17 (critical four 2.25); structure getting the mahi done all six 3.00 (critical four 2.50).</div>
-        <div><span class="pl">Case for red:</span> quorum is failing now, reported independently by both clusters – "decisions can’t be made… unapproved events that were advertised" (W3); "most organized hui have to be postponed" (W6); "more attendance so that we have quorum" ticked by four of six including both high scorers (P2, P3, P6, P7); the Chair names the skills pipeline (AY3).</div>
-        <div><span class="pl">Interviews will settle →</span> ★ Justina: "What is keeping the seats empty?" · ★ Josephine: "What happens to the mahi when a hui can’t go ahead?" If the kōrero shows quorum failure is structural (seats unfillable) rather than episodic (scheduling), this dot is red.</div>
-      </div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> The trustee-level role is genuinely well held on paper – Charter section 8 plus the 2025 Code of Conduct give a trustee a clear, usable picture of the role – and the Chair's survey is the most invested and candid on the board.</div>
+    <details class="dim">
+      <summary><span class="dot st-amber"></span><span class="dh"><span class="dt">Tekoteko</span> <span class="de">· Effective Leadership</span>
+        <span class="one" data-edit="text" data-field="one 2" data-yaml="one[1]">The trustee role is well described; quorum and the skills pipeline are live.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> The trustee-level role is genuinely well held on paper – Charter
+        section 8 plus the 2025 Code of Conduct give a trustee a clear, usable picture of the role – and the
+        Chair's survey is the most invested and candid on the board.</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>Chair and Secretary position descriptions incomplete – scattered references, no consolidated description, no between-hui authority.</li><li>Chair succession and term limits partially specified; no skills matrix anywhere in the set.</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li>Mana / responsibilities of each role clearly set out – all six 3.17; critical four 2.25.</li>
-            <li>Governance structure getting the board's mahi done – all six 3.00; critical four 2.50.</li>
-            <li>Quorum, in the trustees' own words: hui postponed, decisions that can't be made, events advertised unapproved – ticked by four of six including both high scorers.</li>
-            <li>The Chair: "trustees are nominated by whānau and then voted in. This means we don't always get the appropriate skills needed."</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-amber"></span><span>Chair and Secretary position descriptions incomplete – scattered references, no consolidated description, no between-hui authority.</span></li>
+            <li><span class="dot st-amber"></span><span>Chair succession and term limits partially specified; no skills matrix anywhere in the set.</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-amber"></span><span>Mana / responsibilities of each role clearly set out – all six 3.17 · lower four 2.25.</span></li>
+            <li><span class="dot st-amber"></span><span>Governance structure getting the board's mahi done – all six 3.00 · lower four 2.50.</span></li>
+            <li><span class="dot st-red"></span><span>Quorum, in the trustees' own words: hui postponed, decisions that can't be made, events advertised unapproved – ticked by four of six, including both high scorers.</span></li>
+            <li><span class="dot st-amber"></span><span>The Chair: "trustees are nominated by whānau and then voted in. This means we don't always get the appropriate skills needed."</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What is keeping the seats empty, and what would bring people back.</li><li>How the board builds skills once people are around the table.</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> What is keeping the seats empty, and what would bring
+        people back. How the board builds skills once people are around the table.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="dim">
-      <div class="head"><span class="dot likely"></span><div class="names"><span class="te">POU TOKOMANAWA</span> <span class="en">Board Cohesion</span></div>
-        <div class="oneliner">Mana mostly held in the room; disagreement and preparation are the soft spots.</div><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> The mana of people and kaupapa is mostly respected in the room – the best-held meeting item even on the critical read (all six 3.83; critical four 3.25) – and karakia and te reo hold the hui.</div>
+    <details class="dim">
+      <summary><span class="dot st-likely"></span><span class="dh"><span class="dt">Pou Tokomanawa</span> <span class="de">· Board Cohesion</span>
+        <span class="one" data-edit="text" data-field="one 3" data-yaml="one[2]">Mana mostly held in the room; disagreement and preparation are the soft spots.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> The mana of people and kaupapa is mostly respected in the room –
+        the best-held meeting item even on the lower four's read (all six 3.83 · lower four 3.25) – and karakia
+        and te reo hold the hui.</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>The Meeting Agendas hold tikanga – karakia bookends, te reo throughout.</li><li>The 2025 Code of Conduct carries meeting conduct and a breach process; the Deed has no tikanga-based path through disagreement.</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li><span class="likely">Trustees arriving at meetings prepared – critical four 1.50; all six 2.50 (provisional red).</span></li>
-            <li>Managing disagreement &amp; tension – a soft spot – all six 3.00; critical four 2.25.</li>
-            <li>An effective conflict-resolution process is ticked as missing by five of six.</li>
-            <li>The Chair: "a lot of individualism, not working together, personality-driven decisions, little respect for each other."</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-green"></span><span>The Meeting Agendas hold tikanga – karakia opens and closes, te reo throughout.</span></li>
+            <li><span class="dot st-amber"></span><span>The 2025 Code of Conduct carries meeting conduct and a breach process; the Deed has no tikanga-based path through disagreement.</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-likely"></span><span>Trustees aren't arriving at meetings prepared – lower four 1.50 · all six 2.50 (likely red).</span></li>
+            <li><span class="dot st-amber"></span><span>Managing disagreement &amp; tension – a soft spot – all six 3.00 · lower four 2.25.</span></li>
+            <li><span class="dot st-red"></span><span>An effective conflict-resolution process is ticked as missing by five of six.</span></li>
+            <li><span class="dot st-amber"></span><span>The Chair: "a lot of individualism, not working together, personality-driven decisions, little respect for each other."</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What disagreement looks like around this table now – and what an agreed way through would look like.</li><li>Why Josephine reads the same room at 5 while the Chair reads it at 2.</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> What disagreement looks like around this table now –
+        and what an agreed way through would look like. Why Josephine reads the same room at 5 while the Chair
+        reads it at 2.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="dim">
-      <div class="head"><span class="dot red"></span><div class="names"><span class="te">POU TŪHONO</span> <span class="en">Governance Systems</span><span class="pri">Priority</span></div>
-        <div class="oneliner">Continuity is real; document access, milestones and action-tracking are red.</div><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> Continuity from hui to hui is real – minutes confirmed, matters arising tracked, the next hui scheduled, guiding policies referenced on the Meeting Agenda – and the board has already started the fix: the Chair counts "starting a visible policy folder" among her proudest milestones.</div>
+    <details class="dim">
+      <summary><span class="dot st-red"></span><span class="dh"><span class="dt">Pou Tūhono</span> <span class="de">· Governance Systems</span><span class="prio">Priority</span>
+        <span class="one" data-edit="text" data-field="one 4" data-yaml="one[3]">Continuity is real; document access, milestones and action-tracking are red.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> Continuity from hui to hui is real – minutes confirmed, matters
+        arising tracked, the next hui scheduled, guiding policies referenced on the Meeting Agenda – and the board
+        has already started the fix: the Chair counts "starting a visible policy folder" among her proudest
+        milestones.</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>On the Meeting Agendas: no action tracker, decisions not marked, no correspondence log, no item times (red).</li><li>Items only partly attributed to named individuals; the hui Meeting Agenda header lacks time, venue, chair and minute-taker.</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li><span class="red">Easy access to key governance and Trust documents isn't there yet – all six 2.33; critical four 2.00 (red; nobody scored above 3).</span></li>
-            <li><span class="red">Key milestones for the year aren't being mapped – all six 2.33; critical four 1.50 (red).</span></li>
-            <li><span class="likely">Information before meetings – critical four 2.00; all six 2.67 (provisional red).</span></li>
-            <li><span class="likely">Action-tracking between hui – critical four 2.00; all six 2.83 (provisional, borderline).</span></li>
-            <li>A "document storage system" is ticked as missing by four of six.</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-red"></span><span>On the Meeting Agendas: no action tracker, decisions not marked, no correspondence log, no item times.</span></li>
+            <li><span class="dot st-amber"></span><span>The Meeting Agenda only partly names who is responsible for each item, and the hui Meeting Agenda header lacks time, venue, chair and minute-taker.</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-red"></span><span>Easy access to key governance and Trust documents isn't there yet – all six 2.33 · lower four 2.00. Nobody scored above 3.</span></li>
+            <li><span class="dot st-red"></span><span>Key milestones for the year aren't being mapped – all six 2.33 · lower four 1.50.</span></li>
+            <li><span class="dot st-likely"></span><span>Information isn't reaching trustees before meetings – lower four 2.00 · all six 2.67 (likely red).</span></li>
+            <li><span class="dot st-likely"></span><span>Action-tracking between hui isn't holding – lower four 2.00 · all six 2.83 (likely red, borderline).</span></li>
+            <li><span class="dot st-amber"></span><span>A "document storage system" is ticked as missing by four of six.</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>When a trustee needs a document, what happens.</li><li>Where a decision gets written down, and who carries the actions afterwards.</li><li>What trustees actually receive before a hui (blind-spot question – no papers reached this lens).</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> When a trustee needs a document, what happens. Where a
+        decision gets written down, and who carries the actions afterwards. What trustees actually receive before
+        a hui – no papers reached this review.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="dim">
-      <div class="head"><span class="dot likely"></span><div class="names"><span class="te">TĀHUHU</span> <span class="en">Strategic Direction</span></div>
-        <div class="oneliner">The kaupapa is shared and loud; the translation layer isn't written yet.</div><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> The kaupapa is shared and unmistakable – five of six trustees independently name the new marae build as the top priority, with te reo alongside – and a strategic planning wānanga is already scheduled: the will is there.</div>
+    <details class="dim">
+      <summary><span class="dot st-likely"></span><span class="dh"><span class="dt">Tāhuhu</span> <span class="de">· Strategic Direction</span>
+        <span class="one" data-edit="text" data-field="one 5" data-yaml="one[4]">The kaupapa is shared and clear; measures, owners and a review rhythm are the gap.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> The kaupapa is shared and unmistakable – five of six trustees
+        independently name the new marae build as the top priority, with te reo alongside – and the 2024/25
+        Strategic Plan told one clear, culturally grounded story about it. A strategic planning wānanga is already
+        scheduled: the will is there.</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>No current strategic plan reached this lens – the Charter makes the Marae Development Plan optional ("may be prepared").</li><li>The planning wānanga sits in general business on the hui Meeting Agenda; Meeting Agenda items connect to strategic priorities only in part.</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li><span class="likely">Strategy refined into a few key priorities – critical four 1.75; all six 2.50 (provisional red).</span></li>
-            <li>"Our board knows what we are aiming to achieve" – all six 3.83; the Chair scored it 1, the only 1 on that item.</li>
-            <li>Progress on strategic priorities – all six 3.50; critical four 2.75 (scores span 2 to 5).</li>
-            <li>Kim: "We spread too thin and there are random and reactive behaviour to things that are not important."</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-green"></span><span>The 2024/25 Strategic Plan – reviewed since V1 – is strong on direction: vision, values, priorities and activities line up behind te reo.</span></li>
+            <li><span class="dot st-red"></span><span>Its governing level is not built: no success measures, no named owners, no review process – and its 24-month term has now ended.</span></li>
+            <li><span class="dot st-amber"></span><span>The Charter makes the Marae Development Plan optional ("may be prepared"), and the refresh sits as one line in general business on the hui Meeting Agenda.</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-likely"></span><span>Strategy refined into a few key priorities – lower four 1.75 · all six 2.50 (likely red).</span></li>
+            <li><span class="dot st-amber"></span><span>"Our board knows what we are aiming to achieve" – all six 3.83; the Chair scored it 1, the only 1 on that item.</span></li>
+            <li><span class="dot st-amber"></span><span>Progress on strategic priorities – all six 3.50 · lower four 2.75. Scores span 2 to 5.</span></li>
+            <li><span class="dot st-amber"></span><span>Kim: "We spread too thin and there are random and reactive behaviour to things that are not important."</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What sits behind the Chair's solitary 1 on shared direction.</li><li>Whether a written plan exists behind the build and the kura reo – and what would make the wānanga's output stick.</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> What sits behind the Chair's solitary 1 on shared
+        direction. How the 2024/25 plan was actually used at the board table – and what would make the wānanga's
+        output stick this time.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="dim">
-      <div class="head"><span class="dot amber"></span><div class="names"><span class="te">MAIHI</span> <span class="en">Operational Performance</span></div>
-        <div class="oneliner">The board mobilises and delivers; money visibility and the governance/operations line are the gaps.</div><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> The board can mobilise – "we can mobilise the people needed" is one of the survey's best scores (all six 4.00; critical four 3.50) – and the kaupapa record proves it: Pā Wars, Kura Reo, E kai Māori, the papakāinga paid off.</div>
+    <details class="dim">
+      <summary><span class="dot st-amber"></span><span class="dh"><span class="dt">Maihi</span> <span class="de">· Operational Performance</span>
+        <span class="one" data-edit="text" data-field="one 6" data-yaml="one[5]">The board mobilises and delivers; money visibility and the governance / operations line are the gaps.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> The board can mobilise – "we can mobilise the people needed" is one
+        of the survey's best scores (all six 4.00 · lower four 3.50) – and the kaupapa record proves it: Pā Wars,
+        Kura Reo, E kai Māori, the papakāinga paid off.</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>The financial-authority layer is started but unfinished – delegations, spending limits and reporting cadence scattered across the Charter; a Financial Delegation Policy is already named on the May 2026 hui Meeting Agenda.</li><li>Financial reporting itself never reached this lens – the AGM Meeting Agenda names a Financial Performance Report (not assumed deficient).</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li>Reporting structures – all six 3.00; critical four 2.25.</li>
-            <li>Differentiating governance mahi from operational mahi – all six 3.00; critical four 2.25 (Kim scored 1).</li>
-            <li>Financial-process ticks range from one to twelve – six different pictures of the same bank account.</li>
-            <li>Board–operations relationships carry the widest spread in the survey – two 1s (Justina, Kim) against two 5s (Marlene, Josephine).</li>
-            <li>Every trustee ticked seven to ten operational activities the board carries itself.</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-amber"></span><span>The financial delegations are started but unfinished – delegations, spending limits and reporting rhythm scattered across the Charter; a Financial Delegation Policy is already named on the May 2026 hui Meeting Agenda.</span></li>
+            <li><span class="dot st-grey"></span><span>Financial reporting itself never reached this review – the AGM Meeting Agenda names a Financial Performance Report (not assumed deficient).</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-amber"></span><span>Reporting structures – all six 3.00 · lower four 2.25.</span></li>
+            <li><span class="dot st-amber"></span><span>Differentiating governance mahi from operational mahi – all six 3.00 · lower four 2.25. Kim scored 1.</span></li>
+            <li><span class="dot st-amber"></span><span>Financial-process ticks range from one to twelve – six different pictures of the same bank account.</span></li>
+            <li><span class="dot st-amber"></span><span>Board–operations relationships carry the widest spread in the survey – two 1s (Justina, Kim) against two 5s (Marlene, Josephine).</span></li>
+            <li><span class="dot st-amber"></span><span>Five of six trustees ticked seven to ten operational activities the board carries itself.</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>Where the financial delegation policy is at, and how the mana conversation around it is going.</li><li>What each trustee can actually see of the money – and how a payment gets approved, start to finish (Mei).</li><li>What could come off the board's plate first.</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> Where the Financial Delegation Policy is at, and how the
+        mana conversation around it is going. What each trustee can actually see of the money – and how a payment
+        gets approved, start to finish (Mei). What could come off the board's plate first.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="dim">
-      <div class="head"><span class="dot red"></span><div class="names"><span class="te">POU TUARONGO</span> <span class="en">Future-proofed Governance</span><span class="pri">Priority</span></div>
-        <div class="oneliner">Risks named clearly; no written process yet, and continuity is thin.</div><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> Trustees are clear-eyed about risk – compliance, financial, reputational, key-person and project risks are all named in their own words, and PJ brings a distinct landlord and Health &amp; Safety lens the board can use.</div>
+    <details class="dim">
+      <summary><span class="dot st-red"></span><span class="dh"><span class="dt">Pou Tuarongo</span> <span class="de">· Future-proofed Governance</span><span class="prio">Priority</span>
+        <span class="one" data-edit="text" data-field="one 7" data-yaml="one[6]">Risks named clearly; no written process yet, and continuity is thin.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> Trustees are clear-eyed about risk – compliance, Financial,
+        reputational, Key-person and project risks are all named in their own words – and PJ brings a distinct
+        landlord and Health &amp; Safety lens the board can use.</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>No Health &amp; Safety policy and no risk policy, framework or register anywhere in the set – the two legal-duty gaps.</li><li>No induction, board self-review or skills matrix; succession handled only reactively (rotation, election, co-option).</li><li>The Key Holder policy shows the board can write a short, working policy – its own review date (April 2026) has now passed.</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li><span class="red">No robust process yet to manage risks – all six 2.33; critical four 1.50 (red).</span></li>
-            <li>Compliance risk is the most-named risk (four of six) – with a live instance recorded: events advertised without board approval.</li>
-            <li>Protections multi-select diverges: the critical four tick almost none; Josephine ticks eight, Mei seven.</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-red"></span><span>No Health &amp; Safety policy and no risk policy, framework or register anywhere in the set – the two legal-duty gaps.</span></li>
+            <li><span class="dot st-red"></span><span>No induction, board self-review or skills matrix; succession handled only reactively (rotation, election, co-option).</span></li>
+            <li><span class="dot st-amber"></span><span>The Key Holder Policy shows the board can write a short, working policy – its own review date (April 2026) has now passed.</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-red"></span><span>No robust process yet to manage risks – all six 2.33 · lower four 1.50.</span></li>
+            <li><span class="dot st-amber"></span><span>Compliance risk is the most-named risk (four of six) – with a live instance recorded: events advertised without board approval.</span></li>
+            <li><span class="dot st-amber"></span><span>The protections tick-boxes diverge: Kim none, the Chair induction only, PJ expenditure controls only, Marlene four – while Josephine ticks eight and Mei seven.</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>When something unsafe happens on the marae, how it reaches the board (blind-spot question).</li><li>Whether the protections two trustees can see exist on paper – or anywhere.</li><li>Whether the unapproved events were a one-off or a pattern.</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> When something unsafe happens on the marae, how it
+        reaches the board. Whether the protections two trustees can see exist on paper – or anywhere. Whether the
+        unapproved events were a one-off or a pattern.</div>
       </div>
-    </div>
+    </details>
 
-    <div class="dim">
-      <div class="head"><span class="dot green"></span><div class="names"><span class="te">MAHAU</span> <span class="en">External Relationships</span></div>
-        <div class="oneliner">The board's strongest area – and the only one both halves of the board agree on.</div><span class="chev">▶</span></div>
-      <div class="body">
-        <div class="strengthline"><b>Strength:</b> The highest-rated area in the survey, and the only one that holds across both clusters. Pathways for whānau and community to connect score 4.17 (all six) and 4.25 (critical four) – the single highest item. The marae is "an anchor for the revitalization of te reo Māori."</div>
+    <details class="dim">
+      <summary><span class="dot st-green"></span><span class="dh"><span class="dt">Mahau</span> <span class="de">· External Relationships</span>
+        <span class="one" data-edit="text" data-field="one 8" data-yaml="one[7]">The board's strongest area – and the only one both halves of the board agree on.</span></span><span class="arrow">▶</span></summary>
+      <div class="dim-body">
+        <div class="strength"><b>Strength:</b> The highest-rated area in the survey, and the only one that holds
+        across both halves of the board. Pathways for whānau and community to connect score 4.17 (all six) and
+        4.25 (lower four) – the single highest item. The marae is "an anchor for the revitalization of te reo
+        Māori."</div>
         <div class="twocol">
-          <div class="findbox doc"><h5>📄 Documents see</h5><ul><li>Engagement with affiliated groups and named stakeholders is green in the Deed.</li><li>The Facebook policy governs the marae's main channel well; who speaks for the marae to outside media is its one scope gap.</li></ul></div>
-          <div class="findbox survey"><h5>📊 Survey sees</h5><ul>
-            <li>Pathways for whānau and community to connect – all six 4.17; critical four 4.25.</li>
-            <li>Kaupapa that strengthen whānau connection – all six 3.83; critical four 3.75.</li>
-            <li>Whānau made aware of board decisions – all six 3.67; critical four 3.50.</li>
-            <li>Whānau inform and guide decisions – all six 3.17; critical four 3.00: the inward flow is lighter than the outward.</li>
+          <div class="seecol"><h4>📄 Documents see</h4><ul>
+            <li><span class="dot st-green"></span><span>Engagement with affiliated groups and named stakeholders is clearly provided for in the Deed.</span></li>
+            <li><span class="dot st-amber"></span><span>The Facebook Policy governs the marae's main channel well; who speaks for the marae to outside media is its one gap.</span></li>
+          </ul></div>
+          <div class="seecol"><h4>📊 Survey sees</h4><ul>
+            <li><span class="dot st-green"></span><span>Pathways for whānau and community to connect – all six 4.17 · lower four 4.25.</span></li>
+            <li><span class="dot st-green"></span><span>Kaupapa that strengthen whānau connection – all six 3.83 · lower four 3.75.</span></li>
+            <li><span class="dot st-green"></span><span>Whānau made aware of board decisions – all six 3.67 · lower four 3.50.</span></li>
+            <li><span class="dot st-amber"></span><span>Whānau inform and guide decisions – all six 3.17 · lower four 3.00. The inward flow is lighter than the outward.</span></li>
           </ul></div>
         </div>
-        <div class="ivbox"><h5>🗣 Interviews will test</h5><ul><li>What "concentrating more on the people of the marae" would look like (Josephine).</li><li>How news from the board reaches whānau now (PJ).</li></ul></div>
+        <div class="probe"><b>🗣 Interviews will test:</b> What "concentrating more on the people of the marae"
+        would look like (Josephine). How news from the board reaches whānau now (PJ).</div>
       </div>
-    </div>
+    </details>
+  </div>
+</section>
 
-  </section>
+<section class="sec" id="sec-waiting">
+  <div class="sec-head">
+    <h2 class="mono">What this view is waiting on</h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 9" data-yaml="secdesc[8]">The interview lens, and the products that follow</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
+    <p>🗣 <b>The interview lens.</b> Five core kōrero are recommended – Justina, Kim, Josephine, Mei and PJ, with
+    Marlene optional (her distinct topics are carried as add-on questions in the core interviews). When they are
+    done, the third Top 10 folds in, two-source items can become fully triangulated, and the likely red flags get
+    confirmed or softened. The biggest open question gets its answer: why four trustees and two trustees are
+    living such different experiences of the same board.</p>
+    <p>This then becomes the <b>draft</b> dashboard, and after that the board-facing <b>client</b> dashboard –
+    with names removed from anything opinion-based.</p>
+  </div>
+</section>
 
-  <section>
-    <h2 class="sec">What this view is waiting on</h2>
-    <div class="pendcard">
-      <h4>🗣 The interview lens</h4>
-      <p style="margin:.2em 0 0;font-size:.92rem;color:#3f5b5b">Five core kōrero are recommended (Justina, Kim, Josephine, Mei, PJ; Marlene optional – her distinct topics are carried as add-on questions in the core interviews). When they're done, the third Top 10 folds in, two-source items can become fully triangulated, the provisional red flags get confirmed or softened, and the biggest open question gets its answer: why four trustees and two trustees are living such different experiences of the same board. This becomes the <b>draft</b> dashboard, and then the board-facing <b>client</b> dashboard after de-attribution (names removed) for anything opinion-based.</p>
-    </div>
-  </section>
+<section class="sec" id="sec-personality">
+  <div class="sec-head">
+    <h2><span class="reo" data-edit="text" data-field="reo 6" data-yaml="reo[5]">Whaiaro</span><span class="pipe">&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="eng">Personality profiles</span></h2>
+    <span class="secdesc" data-edit="text" data-field="secdesc 10" data-yaml="secdesc[9]">Not gathered for this engagement</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="sec-body">
+    <p>This Tirohanga did not collect personality profiles, so there are no personality-type cards for this board.
+    Nothing here is inferred – we do not guess types. The interview guide draws on each trustee's survey register
+    instead: how much they wrote, what they volunteered, and what they held back. If a personality instrument is
+    run with this board later, this section populates from it and carries unchanged into the draft and client
+    dashboards.</p>
+  </div>
+</section>
 
-  <!-- PERSONALITY (gap named, not fabricated) -->
-  <section>
-    <h2 class="sec">Personality profiles</h2>
-    <p class="sec-note">A standalone view of the board's working styles, when personality-type data exists. It sits on its own – not folded into board cohesion – and carries through to the client dashboard.</p>
-    <div class="pers">
-      <h4 class="pers-h">Whaiaro &nbsp;|&nbsp; Personality Profiles</h4>
-      <p class="pers-intro"><b>Not gathered for this engagement.</b> This Tirohanga did not collect personality profiles, so there are no MBTI cards for this board. Nothing here is inferred – we do not guess types. The interview guide draws on each trustee's survey register instead: how much they wrote, what they volunteered, and what they held back. If a personality instrument is run with this board later, this section populates from it and carries unchanged into the draft and client dashboards.</p>
-    </div>
-  </section>
+<svg class="wave" width="220" height="26" viewBox="0 0 220 26" aria-hidden="true">
+  <path d="M0 16 Q 27 2 55 16 T 110 16 T 165 16 T 220 16" fill="none" stroke="#AF6722" stroke-width="2.5" opacity="0.5"/>
+</svg>
 
-  <footer>
-    <p><span class="conf">Confidential · Prep dashboard · facilitator working view</span></p>
-    <p>Te Whare Hukahuka – Governance Aromatawai · Hurunui o Rangi Marae · Prep Dashboard V1, June 2026. Built from three document reviews (eight documents) and the Tirohanga survey (six trustees, 27 scored items plus free text). Scores are reported as the all-board average alongside the critical-four average – Kim, Justina, PJ and Marlene, the four trustees who read the board low. The split is not tenure-driven: the one self-identified newcomer is the lowest scorer, so the two high reads are treated as a different vantage to be tested in interview, not as newness. Red flags are likely or provisional, drawn from two lenses, and are not carried forward as fixed into the draft or client dashboard. Recommendations are resource-safe for a volunteer board with no paid staff. Documents not yet provided are shown as not-yet-seen or not-yet-built, never as poor quality.</p>
-  </footer>
+<footer>
+  <p><b>Confidential · Prep dashboard · facilitator working view.</b>
+  Te Whare Hukahuka – Governance Aromatawai · Hurunui o Rangi Marae · Prep Dashboard V2, August 2026.
+  Built from four document reviews (nine documents) and the Tirohanga survey (six trustees, 27 scored items plus
+  tick-box and written questions). The 2024/25 Strategic Plan and its review arrived after V1; they are folded in
+  here. Scores are reported as the all-board average alongside the average from the four trustees who read the
+  board low – Kim, Justina, PJ and Marlene. That split is not about newness: the one self-identified newcomer is
+  the lowest scorer, so the two high reads are treated as a different vantage to be tested in interview.
+  Red flags are likely, drawn from two lenses, and are not carried forward as fixed into the draft or client
+  dashboard. Recommendations are resource-safe for a volunteer board with no paid staff. Documents not yet
+  provided are shown as not-yet-seen or not-yet-built, never as poor quality.</p>
+</footer>
 
 </div>
-<script>
-  document.querySelectorAll('.rec .head, .dim .head').forEach(function(h){
+<div id="dqc-overlay" data-tooling>
+  <div class="dqc-panel">
+    <button class="dqc-panel-x" id="dqc-close-x" aria-label="Close" title="Close" type="button">&times;</button>
+    <h2>Save your DQC review</h2>
+    <p class="dqc-panel-lead">Your edits stay on this page until you save. Choose how to hand them on — you can take both.</p>
+    <div id="dqc-summary"></div>
+    <div id="dqc-change-list"></div>
+    <div class="dqc-actions">
+      <button class="dqc-btn dqc-btn-edit" id="dqc-dl-html" type="button">Download edited dashboard (HTML)</button>
+      <button class="dqc-btn dqc-btn-save" id="dqc-dl-changes" type="button">Download change list (for the spec)</button>
+      <button class="dqc-btn dqc-btn-save" id="dqc-copy-changes" type="button">Copy change list</button>
+      <button class="dqc-btn dqc-btn-ghost" id="dqc-close-save" type="button">Back to review</button>
+    </div>
+    <div class="dqc-aside">
+      The <b>edited HTML</b> is for clients whose dashboard is hosted as a file. The <b>change list</b> maps each edit to its spec field, for clients whose dashboard is regenerated from the YAML. Taking both covers either path.
+    </div>
+  </div>
+</div>
+<script data-tooling>
+  document.querySelectorAll('.dim .head').forEach(function(h){
     h.addEventListener('click',function(){h.parentElement.classList.toggle('open');});
   });
 </script>
+<script data-tooling>
+(function(){
+  const body = document.body;
+
+  // ---- transclusion: single-source recs / red flags -----------------------
+  // The generator (v0.7.8+, gated) stamps data-canonical on the editable SOURCE
+  // card/row and data-ref on each mirror copy. Here we de-tag the mirror's
+  // editable children (so there is exactly ONE editable source) and bind them so
+  // editing the canonical re-mirrors live. Runs BEFORE `editables` is built, so
+  // mirror elements are naturally excluded from the editable set.
+  (function setupTransclusion(){
+    const canon = {};
+    document.querySelectorAll('[data-canonical]').forEach(function(card){
+      canon[card.getAttribute('data-canonical')] =
+        [].slice.call(card.querySelectorAll('[data-edit="text"]'));
+    });
+    document.querySelectorAll('[data-ref]').forEach(function(card){
+      const srcEds = canon[card.getAttribute('data-ref')];
+      if(!srcEds) return;
+      [].slice.call(card.querySelectorAll('[data-edit="text"]')).forEach(function(mEl, i){
+        const src = srcEds[i];
+        mEl.removeAttribute('data-edit');   // a mirror is not independently editable
+        mEl.removeAttribute('data-field');
+        mEl.removeAttribute('data-yaml');
+        mEl.classList.add('dqc-mirror');
+        if(src){
+          (src.__mirrors = src.__mirrors || []).push(mEl);
+          mEl.innerHTML = src.innerHTML;     // initial sync (no-op when already equal)
+        }
+      });
+    });
+  })();
+  function mirrorSync(el){
+    if(el && el.__mirrors){
+      const html = el.innerHTML;
+      el.__mirrors.forEach(function(m){ m.innerHTML = html; });
+    }
+  }
+  const editables = [...document.querySelectorAll('[data-edit="text"]')];
+  const statuses  = [...document.querySelectorAll('[data-edit="status"]')];
+
+  // Capture pristine values so we can diff later
+  editables.forEach(el => el.dataset.original = el.textContent.trim());
+  statuses.forEach(el => el.dataset.originalStatus = el.dataset.status);
+
+  window.__dqcRegister = function(el){
+    if(!el || el.__dqcReg) return; el.__dqcReg = true;
+    el.dataset.original = (el.textContent||'').trim();
+    el.addEventListener('input', function(){ if(typeof mirrorSync==='function'){ try{ mirrorSync(el); }catch(e){} } refreshFlags(); });
+    editables.push(el);
+    if(document.body.classList.contains('dqc-editing')) el.setAttribute('contenteditable','true');
+    refreshFlags();
+  };
+  function refreshFlags(){
+    let n = 0;
+    editables.forEach(el => {
+      const changed = el.textContent.trim() !== el.dataset.original;
+      el.classList.toggle('dqc-edited', changed);
+      if(changed) n++;
+    });
+    statuses.forEach(el => {
+      const changed = el.dataset.status !== el.dataset.originalStatus;
+      el.classList.toggle('dqc-edited', changed);
+      if(changed) n++;
+    });
+    document.getElementById('dqc-edit-count').textContent = n;
+    document.getElementById('dqc-open-save').disabled = (n === 0);
+    return n;
+  }
+
+  // Toggle edit mode
+  const toggle = document.getElementById('dqc-toggle');
+  toggle.addEventListener('click', () => {
+    const on = body.classList.toggle('dqc-editing');
+    toggle.textContent = on ? 'Exit edit mode' : 'Enter edit mode';
+    toggle.classList.toggle('on', on);
+    editables.forEach(el => {
+      if(on) el.setAttribute('contenteditable', 'true');
+      else el.removeAttribute('contenteditable');
+    });
+  });
+  editables.forEach(el => el.addEventListener('input', function(){ mirrorSync(el); refreshFlags(); }));
+
+  // Cycle constrained controls
+  statuses.forEach(el => {
+    el.addEventListener('click', () => {
+      if(!body.classList.contains('dqc-editing')) return;
+      const set = (el.dataset.statusSet || '').split(',').map(s => s.trim()).filter(Boolean);
+      if(set.length === 0) return;
+      const i = set.indexOf(el.dataset.status);
+      const next = set[(i + 1) % set.length];
+      // Optional class-prefix swap so existing dashboard CSS keeps controlling appearance
+      const prefix = el.dataset.statusClassPrefix;
+      if(prefix){
+        if(el.dataset.status) el.classList.remove(prefix + el.dataset.status);
+        el.classList.add(prefix + next);
+      }
+      el.dataset.status = next;
+      // Optional visible-label update via data-labels JSON map
+      if(el.dataset.labels){
+        try {
+          const labels = JSON.parse(el.dataset.labels);
+          const labelEl = el.querySelector('.dqc-label') || el;
+          if(labels[next] != null) labelEl.textContent = labels[next];
+        } catch(e){ /* silently ignore malformed labels JSON */ }
+      }
+      refreshFlags();
+    });
+  });
+
+  // Build the change record
+  function collectChanges(){
+    const out = [];
+    editables.forEach(el => {
+      const now = el.textContent.trim();
+      if(now !== el.dataset.original){
+        out.push({ where: el.dataset.field, yaml: el.dataset.yaml, before: el.dataset.original, after: now, type: 'text' });
+      }
+    });
+    statuses.forEach(el => {
+      if(el.dataset.status !== el.dataset.originalStatus){
+        out.push({ where: el.dataset.field, yaml: el.dataset.yaml, before: el.dataset.originalStatus, after: el.dataset.status, type: 'status' });
+      }
+    });
+    return out;
+  }
+
+  // Save panel open/close
+  const overlay = document.getElementById('dqc-overlay');
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function openSave(){
+    const changes = collectChanges();
+    document.getElementById('dqc-summary').innerHTML =
+      '<b>' + changes.length + '</b> edit' + (changes.length === 1 ? '' : 's') + ' ready to save across this dashboard.';
+    const list = document.getElementById('dqc-change-list');
+    if(!changes.length){
+      list.innerHTML = '<div class="dqc-none">No changes yet.</div>';
+    } else {
+      list.innerHTML = changes.map(c =>
+        '<div class="dqc-change"><div class="dqc-where">' + esc(c.where || '') +
+        ' <span class="dqc-yaml">' + esc(c.yaml || '') + '</span></div>' +
+        '<div><span class="dqc-before">' + esc(c.before) + '</span>' +
+        '<span class="dqc-arrow">→</span>' +
+        '<span class="dqc-after">' + esc(c.after) + '</span></div></div>'
+      ).join('');
+    }
+    overlay.classList.add('open');
+  }
+  function closeSave(){ overlay.classList.remove('open'); }
+  document.getElementById('dqc-open-save').addEventListener('click', openSave);
+  document.getElementById('dqc-close-save').addEventListener('click', closeSave);
+  document.getElementById('dqc-close-x').addEventListener('click', closeSave);
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSave(); });
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeSave(); });
+
+  // Build a sensible output filename from <title>, stripping the " — editable" tail,
+  // and bumping the version so downloaded files never collide with the source.
+  //   V4               → V4.1
+  //   V4.1             → V4.2
+  //   V4.2.3           → V4.2.4
+  //   (no V<n> found)  → append "-edited"
+  function bumpVersion(name){
+    const re = /V(\d+(?:\.\d+)*)/i;
+    const m = name.match(re);
+    if(!m) return name + '-edited';
+    const parts = m[1].split('.');
+    if(parts.length === 1) parts.push('1');
+    else parts[parts.length - 1] = String(parseInt(parts[parts.length - 1], 10) + 1);
+    return name.replace(re, 'V' + parts.join('.'));
+  }
+  function outputName(suffix){
+    const raw = (document.querySelector('title') ? document.querySelector('title').textContent : 'dashboard');
+    // slugify (dots allowed so V4.1 survives)
+    let base = raw.replace(/\s*[—-]\s*editable\s*$/i, '')
+                  .replace(/[^a-zA-Z0-9_.-]+/g, '-')
+                  .replace(/^[-.]+|[-.]+$/g, '');
+    base = bumpVersion(base);
+    return base + suffix;
+  }
+
+  // Export 1: edited HTML with the entire editing layer stripped
+  document.getElementById('dqc-dl-html').addEventListener('click', () => {
+    editables.forEach(mirrorSync); // final materialise: bake canonical text into every mirror
+    const clone = document.documentElement.cloneNode(true);
+    // Remove every tooling element
+    clone.querySelectorAll('[data-tooling]').forEach(n => n.remove());
+    // Drop the dqc-editing body class
+    if(clone.querySelector('body')) clone.querySelector('body').classList.remove('dqc-editing');
+    // Strip contenteditable
+    clone.querySelectorAll('[contenteditable]').forEach(n => n.removeAttribute('contenteditable'));
+    // Strip all editor metadata so no edit surface leaks
+    const stripAttrs = ['data-edit','data-field','data-yaml','data-original','data-original-status','data-status-set','data-status-class-prefix','data-labels'];
+    stripAttrs.forEach(attr => {
+      clone.querySelectorAll('[' + attr + ']').forEach(n => n.removeAttribute(attr));
+    });
+    // Drop editor visual classes
+    clone.querySelectorAll('.dqc-edited').forEach(n => n.classList.remove('dqc-edited'));
+    clone.querySelectorAll('.dqc-mirror').forEach(n => n.classList.remove('dqc-mirror'));
+    // Sanitise contenteditable cruft (font-size spans, baked edit-highlight bg).
+    clone.querySelectorAll('span[style]').forEach(sp => {
+      sp.removeAttribute('style');
+      sp.classList.remove('dqc-edited');
+      if(sp.classList.length === 0) sp.removeAttribute('class');
+      if(sp.attributes.length === 0){
+        const parent = sp.parentNode;
+        while(sp.firstChild) parent.insertBefore(sp.firstChild, sp);
+        parent.removeChild(sp);
+      }
+    });
+    // Trim " — editable" suffix from the page title
+    const t = clone.querySelector('title');
+    if(t) t.textContent = t.textContent.replace(/\s*[—-]\s*editable\s*$/i, '');
+    download('<!DOCTYPE html>\n' + clone.outerHTML, outputName('.html'), 'text/html');
+  });
+
+  // Export 2: change list mapped to spec fields
+  function changeListMarkdown(changes){
+    const stamp = new Date().toISOString().slice(0, 10);
+    const title = (document.querySelector('title') ? document.querySelector('title').textContent : 'Dashboard')
+                    .replace(/\s*[—-]\s*editable\s*$/i, '');
+    let md = '# ' + title + ' — DQC change list\n\n';
+    md += '_Generated ' + stamp + ' · ' + changes.length + ' edit(s)_\n\n';
+    md += 'Apply these to the spec, then regenerate the dashboard.\n\n';
+    changes.forEach((c, i) => {
+      md += '### ' + (i + 1) + '. ' + (c.where || '(unlabelled)') + '\n';
+      md += '- **Spec field:** `' + (c.yaml || '—') + '`\n';
+      md += '- **Type:** ' + c.type + '\n';
+      md += '- **From:** ' + c.before + '\n';
+      md += '- **To:** ' + c.after + '\n\n';
+    });
+    return md;
+  }
+  document.getElementById('dqc-dl-changes').addEventListener('click', () => {
+    download(changeListMarkdown(collectChanges()), outputName('-changelog.md'), 'text/markdown');
+  });
+  document.getElementById('dqc-copy-changes').addEventListener('click', (e) => {
+    const btn = e.currentTarget;
+    const orig = btn.textContent;
+    navigator.clipboard.writeText(changeListMarkdown(collectChanges())).then(() => {
+      btn.textContent = 'Copied ✓';
+      setTimeout(() => btn.textContent = orig, 1600);
+    });
+  });
+
+  function download(text, name, type){
+    const blob = new Blob([text], {type});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  refreshFlags();
+})();
+
+/* ---- click-guard (make-editable) -------------------------------------------
+   A click inside expanded content must NOT collapse the box. The recommendation
+   card carries its collapse onclick on the whole card, so a click on its body
+   bubbles up and collapses it — fatal when reading or editing. In EDIT MODE only, this stops the bubble inside editable regions/bodies so a
+   click to edit doesn't collapse the box. VIEW mode keeps click-to-collapse. */
+document.querySelectorAll('.rec-card-detail,.dim-body,.crf-body,.doc-review-body,.pers-collapse-body,.inline-docs-body,[data-edit],[data-ref],.dqc-mirror').forEach(function(__el){
+  __el.addEventListener('click', function(__e){ if(document.body.classList.contains('dqc-editing')) __e.stopPropagation(); }, false);
+});
+</script><script data-tooling>
+(function(){
+  function editing(){ return document.body.classList.contains('dqc-editing'); }
+  function btn(txt,title,cls){ var b=document.createElement('button'); b.type='button';
+    b.className='dqc-struct-btn'+(cls?' '+cls:''); b.setAttribute('data-tooling','');
+    b.textContent=txt; b.title=title; return b; }
+
+  // Promote a runtime-inserted element to a FULL standard editable field.
+  function makeField(el,label){
+    if(!el) return el;
+    el.setAttribute('data-edit','text'); el.setAttribute('data-field', label||'New field'); el.setAttribute('data-yaml','');
+    if(typeof window.__dqcRegister==='function') window.__dqcRegister(el); else el.setAttribute('contenteditable','true');
+    return el;
+  }
+  // Click-guard for runtime-inserted cards: a click-to-edit inside a collapsible
+  // card must NOT bubble to the card's collapse handler while in edit mode. The
+  // base guard only covers load-time elements, so new cards need their own.
+  function guardClicks(root){
+    if(!root) return;
+    var els=[root].concat([].slice.call(root.querySelectorAll('.rec-card-detail,[data-edit],.dqc-dim-select')));
+    els.forEach(function(el){ if(el && !el.__dqcGuard){ el.__dqcGuard=true;
+      el.addEventListener('click',function(e){ if(document.body.classList.contains('dqc-editing')) e.stopPropagation(); }, false); } });
+  }
+  // The 8 whare components, read off the page's own dimension cards (no hardcoding).
+  function whareOptions(){
+    return [].slice.call(document.querySelectorAll('.dimension-card')).map(function(c){
+      var te=c.querySelector('.dim-te-reo'), en=c.querySelector('.dim-english');
+      var t=te?te.textContent.trim():'', e=en?en.textContent.trim():'';
+      return {label: e ? (t+' – '+e) : t};
+    }).filter(function(o){ return o.label; });
+  }
+  // A dropdown that writes the chosen whare into a display element (which is what
+  // ships). The <select> is data-tooling, so export strips it and leaves the text.
+  function attachDimPicker(dimEl){
+    if(!dimEl) return;
+    dimEl.classList.add('dqc-dim-unset');
+    var sel=document.createElement('select'); sel.className='dqc-dim-select'; sel.setAttribute('data-tooling','');
+    var ph=document.createElement('option'); ph.value=''; ph.textContent='Whare component…'; ph.disabled=true; ph.selected=true;
+    sel.appendChild(ph);
+    whareOptions().forEach(function(o){ var op=document.createElement('option'); op.value=o.label; op.textContent=o.label; sel.appendChild(op); });
+    sel.addEventListener('click',function(e){ e.stopPropagation(); });
+    sel.addEventListener('change',function(e){ e.stopPropagation();
+      if(sel.value){ dimEl.textContent=sel.value; dimEl.classList.remove('dqc-dim-unset'); } });
+    dimEl.parentNode.insertBefore(sel, dimEl.nextSibling);
+  }
+
+  var ITEMS = [
+    {sel:'.overview-points > li',          host:function(it){return it;}},
+    {sel:'.top-ten > .rec-card',           host:function(it){return it.querySelector('.rec-card-header')||it;}},
+    {sel:'.additional-recs > .rec-card',   host:function(it){return it.querySelector('.rec-card-header')||it;}},
+    {sel:'.crf-list > .all-rf-row',        host:function(it){return it.querySelector('.all-rf-head')||it;}}
+  ];
+  // place:'inside' => append as last child of the container; 'after' => sibling after it
+  var ADDERS = [
+    {container:'.overview-points', label:'+ add point',          fn:insertBullet, place:'after'},
+    {container:'.top-ten',         label:'+ add recommendation', fn:insertRec,    place:'inside'},
+    {container:'.additional-recs', label:'+ add recommendation', fn:insertRec,    place:'inside'},
+    {container:'.crf-list',        label:'+ add flag',           fn:insertFlag,   place:'inside'}
+  ];
+
+  function ctlFor(item,cfg){
+    var c=document.createElement('span'); c.className='dqc-struct-ctl'; c.setAttribute('data-tooling','');
+    var up=btn('↑','Move up'), dn=btn('↓','Move down'), del=btn('✕','Delete');
+    up.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();move(item,cfg,-1);});
+    dn.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();move(item,cfg,1);});
+    del.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();
+      if(window.confirm('Delete this item?')){ item.remove(); renumber(); }});
+    c.appendChild(up); c.appendChild(dn); c.appendChild(del); return c;
+  }
+  function hasAdder(container,place){
+    if(place==='inside'){ return !!container.querySelector(':scope > .dqc-add-btn'); }
+    return container.nextElementSibling && container.nextElementSibling.classList.contains('dqc-add-btn');
+  }
+  function addControls(){
+    ITEMS.forEach(function(cfg){
+      document.querySelectorAll(cfg.sel).forEach(function(it){
+        if(it.querySelector('.dqc-struct-ctl')) return;
+        cfg.host(it).appendChild(ctlFor(it,cfg));
+      });
+    });
+    ADDERS.forEach(function(a){
+      document.querySelectorAll(a.container).forEach(function(c){
+        if(hasAdder(c,a.place)) return;
+        var b=btn(a.label,a.label,'dqc-add-btn');
+        b.addEventListener('click',function(e){e.stopPropagation();e.preventDefault();a.fn(c);});
+        if(a.place==='inside') c.appendChild(b); else c.parentNode.insertBefore(b, c.nextSibling);
+      });
+    });
+  }
+  function removeControls(){
+    document.querySelectorAll('.dqc-struct-ctl,.dqc-add-btn,.dqc-dim-select').forEach(function(n){ n.remove(); });
+  }
+  function move(item,cfg,dir){
+    var sib=dir<0?item.previousElementSibling:item.nextElementSibling;
+    while(sib && !sib.matches(cfg.sel)) sib=dir<0?sib.previousElementSibling:sib.nextElementSibling;
+    if(!sib) return;
+    if(dir<0) item.parentNode.insertBefore(item,sib); else item.parentNode.insertBefore(sib,item);
+    renumber();
+  }
+  function insertBullet(container){
+    var ex=container.querySelector('li'); var li=document.createElement('li');
+    if(ex&&ex.className) li.className=ex.className; li.textContent='New point';
+    container.appendChild(li); makeField(li,'Snapshot point'); addControls(); renumber(); li.focus();
+  }
+  function insertFlag(container){
+    var row=document.createElement('div'); row.className='all-rf-row';
+    row.setAttribute('data-canonical','rf:new-'+Date.now());
+    row.innerHTML='<div class="all-rf-head"><span class="red-flag-icon">⚑</span>'
+      +'<span class="rf-num">RF #?</span><span class="all-rf-headline">New red flag</span></div>'
+      +'<div class="all-rf-dim">Select whare component</div>'
+      +'<div class="all-rf-sub">Describe what is behind this flag.</div>';
+    container.appendChild(row); addControls();
+    makeField(row.querySelector('.all-rf-headline'),'Red flag headline');
+    makeField(row.querySelector('.all-rf-sub'),'Red flag detail');
+    attachDimPicker(row.querySelector('.all-rf-dim'));
+    guardClicks(row);
+    renumber(); var h=row.querySelector('.all-rf-headline'); if(h) h.focus();
+  }
+  function insertRec(section){
+    var tmpl=section.querySelector('.rec-card'); if(!tmpl) return;
+    var card=tmpl.cloneNode(true);
+    card.removeAttribute('id'); card.classList.add('expanded');
+    card.removeAttribute('data-canonical'); card.removeAttribute('data-ref');
+    card.querySelectorAll('.dqc-struct-ctl,.dqc-add-btn,.dqc-dim-select').forEach(function(n){ n.remove(); });
+    card.querySelectorAll('[data-edit]').forEach(function(n){
+      n.removeAttribute('data-edit'); n.removeAttribute('data-field'); n.removeAttribute('data-yaml');
+      n.removeAttribute('contenteditable'); n.classList.remove('dqc-edited','dqc-mirror'); });
+    var title=card.querySelector('.rec-card-title'); if(title) title.textContent='New recommendation';
+    card.querySelectorAll('.rec-field-body').forEach(function(b,i){ b.innerHTML=(i===0?'Purpose…':'…'); });
+    var dim=card.querySelector('.rec-card-dim'); if(dim) dim.textContent='Select whare component';
+    section.appendChild(card); addControls();
+    makeField(title,'Recommendation title');
+    card.querySelectorAll('.rec-field-body').forEach(function(b){ makeField(b,'Recommendation field'); });
+    attachDimPicker(dim);
+    guardClicks(card);
+    renumber();
+  }
+  function renumber(){
+    document.querySelectorAll('.top-ten > .rec-card').forEach(function(card,i){
+      var n=card.querySelector('.rec-card-num'); if(n) n.textContent=String(i+1);
+      if(card.id && /^rec-\d+$/.test(card.id)) card.id='rec-'+(i+1);
+    });
+    document.querySelectorAll('.crf-list > .all-rf-row').forEach(function(row,i){
+      var label='RF #'+(i+1);
+      var b=row.querySelector('.rf-num'); if(b) b.textContent=label;
+      var key=row.getAttribute('data-canonical');
+      if(key){ var mir=document.querySelector('[data-ref="'+key+'"]');
+        if(mir){ var mb=mir.querySelector('.rf-num'); if(mb) mb.textContent=label; } }
+    });
+  }
+  var mo=new MutationObserver(function(){ editing()?addControls():removeControls(); });
+  mo.observe(document.body,{attributes:true,attributeFilter:['class']});
+  if(editing()) addControls();
+})();
+</script>
+<script>
+(function(){
+  var secs = document.querySelectorAll('section.sec');
+  // ships open; JS collapses on load (progressive enhancement)
+  secs.forEach(function(s){ s.classList.add('collapsed'); });
+  secs.forEach(function(s){
+    var head = s.querySelector('.sec-head');
+    head.addEventListener('click', function(e){
+      if (e.target.isContentEditable) return;
+      s.classList.toggle('collapsed');
+    });
+  });
+  function expandTarget(){
+    var id = location.hash.replace('#','');
+    if(!id) return;
+    var el = document.getElementById(id);
+    if(el && el.classList.contains('sec')){ el.classList.remove('collapsed'); }
+  }
+  document.querySelectorAll('.toc a').forEach(function(a){
+    a.addEventListener('click', function(){
+      var el = document.querySelector(a.getAttribute('href'));
+      if(el){ el.classList.remove('collapsed'); }
+    });
+  });
+  window.addEventListener('hashchange', expandTarget);
+  expandTarget();
+  function expandAll(){
+    secs.forEach(function(s){ s.classList.remove('collapsed'); });
+    document.querySelectorAll('details').forEach(function(d){ d.setAttribute('open',''); });
+  }
+  window.addEventListener('beforeprint', expandAll);
+  if(window.matchMedia){
+    window.matchMedia('print').addEventListener
+      ? window.matchMedia('print').addEventListener('change', function(m){ if(m.matches) expandAll(); })
+      : window.matchMedia('print').addListener(function(m){ if(m.matches) expandAll(); });
+  }
+})();
+</script>
 </body>
 </html>
-
