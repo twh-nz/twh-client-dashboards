@@ -2221,11 +2221,20 @@ body.d2 .mana-ref strong { font-weight: 800; }
 </script>
 <script>
 (function () {
+  let lastHeight = 0;
+  let resizeTimer = null;
+
   function sendHeight() {
     const height = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
     );
+
+    if (Math.abs(height - lastHeight) < 10) {
+      return;
+    }
+
+    lastHeight = height;
 
     window.parent.postMessage(
       {
@@ -2236,16 +2245,15 @@ body.d2 .mana-ref strong { font-weight: 800; }
     );
   }
 
-  window.addEventListener("load", sendHeight);
-  window.addEventListener("resize", sendHeight);
+  window.addEventListener("load", function () {
+    setTimeout(sendHeight, 300);
+    setTimeout(sendHeight, 1000);
+  });
 
-  if ("ResizeObserver" in window) {
-    const observer = new ResizeObserver(sendHeight);
-    observer.observe(document.body);
-  }
-
-  setTimeout(sendHeight, 300);
-  setTimeout(sendHeight, 1000);
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(sendHeight, 250);
+  });
 })();
 </script>
 </body>
