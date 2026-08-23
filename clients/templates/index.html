@@ -2219,5 +2219,34 @@ body.d2 .mana-ref strong { font-weight: 800; }
   postHeight();
 })();
 </script>
+<script>
+(function () {
+  function sendHeight() {
+    const height = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+
+    window.parent.postMessage(
+      {
+        type: "rangahaua-height",
+        height: height
+      },
+      "*"
+    );
+  }
+
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(sendHeight);
+    observer.observe(document.body);
+  }
+
+  setTimeout(sendHeight, 300);
+  setTimeout(sendHeight, 1000);
+})();
+</script>
 </body>
 </html>
