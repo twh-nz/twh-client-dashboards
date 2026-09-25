@@ -392,6 +392,8 @@
   /* FOOTER */
   .site-footer { max-width: 1100px; margin: 0 auto; padding: 1.5rem 2rem; border-top: 2px solid var(--border); text-align: center; font-size: 0.8rem; color: var(--text-light); }
   .site-footer strong { color: var(--twh-maroon); }
+  .site-footer { border-top: 0; padding-top: 0.85rem; padding-bottom: 1.5rem; }
+  .site-footer p { margin: 0; }
 
   /* V0.3: Recommendation card meta + sequencing badge */
   .rec-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
@@ -2289,9 +2291,29 @@ body.v10 :is(.rec-card .rec-card-detail, .all-rf-row .all-rf-dim, .all-rf-row .a
   </div>
 
 </div>
+<section class="twh-disclaimer-wrap no-print" aria-label="About this dashboard and disclaimer">
+  <details class="twh-disclaimer">
+    <summary>
+      <span class="twh-disclaimer-icon" aria-hidden="true">i</span>
+      <span class="twh-disclaimer-title">About this dashboard &amp; disclaimer</span>
+      <span class="twh-disclaimer-chevron" aria-hidden="true"></span>
+    </summary>
+    <div class="twh-disclaimer-body">
+      <p class="twh-disclaimer-intro">
+        This dashboard is based on information provided by your organisation and its representatives. It is intended to support governance reflection and improvement.
+      </p>
+      <div class="twh-disclaimer-label">Please keep in mind</div>
+      <ul>
+        <li>While care has been taken in preparing this dashboard, Te Whare Hukahuka cannot guarantee that all information is complete or accurate.</li>
+        <li>Decisions and actions arising from the information presented remain the responsibility of the board and relevant decision-makers.</li>
+        <li>If you believe your governance is not fully reflected, or we have misinterpreted feedback, please let us know.</li>
+        <li>Our conclusions are <strong>strong opinions, loosely held</strong>. We are happy to amend the information presented where new information or context changes our understanding.</li>
+      </ul>
+    </div>
+  </details>
+</section>
 <footer class="site-footer">
   <p>Governance Aromatawai for <strong>REAP Aotearoa</strong> &ndash; September 2026</p>
-  <p>Lead assessor: Shay Wright, Chevourne Taukiri &ndash; Te Whare Hukahuka</p>
 </footer>
 
 <script>
@@ -2399,99 +2421,149 @@ body.v10 :is(.rec-card .rec-card-detail, .all-rf-row .all-rf-dim, .all-rf-row .a
     }, 60);
   }
 
-  function togglePersonalitySection(header) { header.classList.toggle('open'); header.nextElementSibling.classList.toggle('open'); }</script><script>
+  function togglePersonalitySection(header) { header.classList.toggle('open'); header.nextElementSibling.classList.toggle('open'); }</script>
+<!-- =========================================================
+     TWH DASHBOARD FOOTER DISCLOSURE / DISCLAIMER
+     Prototype for template adoption
+     ========================================================= -->
+
+
+<style>
+.twh-disclaimer-wrap {
+  width: min(calc(100% - 64px), 1100px);
+  margin: 18px auto 0;
+  font-family: inherit;
+}
+.twh-disclaimer {
+  border-top: 1px solid rgba(101,45,28,.24);
+  border-bottom: 1px solid rgba(101,45,28,.24);
+}
+.twh-disclaimer summary {
+  display: grid;
+  grid-template-columns: 30px 1fr 24px;
+  gap: 10px;
+  align-items: center;
+  min-height: 58px;
+  padding: 8px 4px;
+  cursor: pointer;
+  list-style: none;
+  color: #65301f;
+}
+.twh-disclaimer summary::-webkit-details-marker { display: none; }
+.twh-disclaimer summary::marker { content: ""; }
+.twh-disclaimer summary:hover { background: rgba(196,150,44,.045); }
+.twh-disclaimer-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #c4962c;
+  border-radius: 50%;
+  color: #c4962c;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+.twh-disclaimer-title {
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+.twh-disclaimer-chevron {
+  justify-self: end;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-right: 2px solid #c4962c;
+  border-bottom: 2px solid #c4962c;
+  transform: rotate(45deg);
+  transition: transform .22s ease;
+}
+.twh-disclaimer[open] .twh-disclaimer-chevron { transform: rotate(225deg); }
+.twh-disclaimer-body {
+  margin: 0 0 16px 40px;
+  padding: 20px 24px 19px;
+  background: #f3ead8;
+  border-left: 3px solid #c4962c;
+  border-radius: 0 7px 7px 0;
+  color: #5e514a;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.twh-disclaimer-intro {
+  max-width: 1050px;
+  margin: 0 0 15px;
+}
+.twh-disclaimer-label {
+  margin: 0 0 6px;
+  color: #8d312f;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.twh-disclaimer-body ul {
+  margin: 0;
+  padding-left: 19px;
+}
+.twh-disclaimer-body li { margin: 4px 0; padding-left: 3px; }
+.twh-disclaimer-body strong { color: #65301f; font-weight: 700; }
+@media (max-width: 767px) {
+  .twh-disclaimer-wrap { width: calc(100% - 30px); margin: 14px auto 0; }
+  .twh-disclaimer summary { grid-template-columns: 27px 1fr 20px; min-height: 54px; }
+  .twh-disclaimer-title { font-size: 15px; }
+  .twh-disclaimer-body { margin-left: 0; padding: 16px 16px 15px; font-size: 13px; }
+}
+@media print {
+  .twh-disclaimer-wrap { display: none !important; }
+}
+</style>
+
+<script>
 (function () {
   "use strict";
-
   if (window.self === window.top) return;
-
   var lastHeight = 0;
   var timer = null;
-
   function getContentHeight() {
     var body = document.body;
     if (!body) return 0;
-
-    /*
-     * Measure the bottom-most content inside the body rather than
-     * documentElement.scrollHeight. This avoids the iframe height itself
-     * becoming part of the measurement and creating a growth loop.
-     */
     var maxBottom = 0;
     var children = body.children;
-
     for (var i = 0; i < children.length; i++) {
       var el = children[i];
-
-      /* Ignore scripts/styles and fixed-position UI */
-      if (
-        el.tagName === "SCRIPT" ||
-        el.tagName === "STYLE" ||
-        el.tagName === "LINK"
-      ) continue;
-
+      if (el.tagName === "SCRIPT" || el.tagName === "STYLE" || el.tagName === "LINK") continue;
       var style = window.getComputedStyle(el);
-      if (
-        style.display === "none" ||
-        style.position === "fixed"
-      ) continue;
-
+      if (style.display === "none" || style.position === "fixed") continue;
       var rect = el.getBoundingClientRect();
       var bottom = rect.bottom + window.pageYOffset;
-
-      if (bottom > maxBottom) {
-        maxBottom = bottom;
-      }
+      if (bottom > maxBottom) maxBottom = bottom;
     }
-
     return Math.ceil(maxBottom);
   }
-
   function sendHeight() {
     clearTimeout(timer);
-
     timer = setTimeout(function () {
       var height = getContentHeight();
-
       if (height > 0 && Math.abs(height - lastHeight) > 2) {
         lastHeight = height;
-
-        window.parent.postMessage({
-          type: "twh-dashboard-height",
-          height: height
-        }, "*");
+        window.parent.postMessage({ type: "twh-dashboard-height", height: height }, "*");
       }
     }, 50);
   }
-
-  /* Initial measurements */
   window.addEventListener("load", sendHeight);
   window.addEventListener("resize", sendHeight);
-
-  /*
-   * Watch the BODY for actual dashboard-content changes:
-   * accordions opening/closing, recommendations expanding, etc.
-   */
   if ("ResizeObserver" in window) {
     var resizeObserver = new ResizeObserver(sendHeight);
     resizeObserver.observe(document.body);
   }
-
-  /*
-   * MutationObserver catches class/style changes used by dashboard
-   * accordions even where ResizeObserver timing is inconsistent.
-   */
   if ("MutationObserver" in window) {
     var mutationObserver = new MutationObserver(sendHeight);
-
     mutationObserver.observe(document.body, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ["class", "style"]
+      subtree: true, childList: true, attributes: true, attributeFilter: ["class", "style"]
     });
   }
-
   sendHeight();
 })();
 </script>
