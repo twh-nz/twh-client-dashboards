@@ -2402,21 +2402,97 @@ body.v10 :is(.rec-card .rec-card-detail, .all-rf-row .all-rf-dim, .all-rf-row .a
   function togglePersonalitySection(header) { header.classList.toggle('open'); header.nextElementSibling.classList.toggle('open'); }</script><script>
 (function () {
   "use strict";
-  if (window.self === window.top) { return; } /* not embedded: do nothing */
-  function postHeight() {
-    var h = Math.max(
-      document.documentElement.scrollHeight,
-      document.body ? document.body.scrollHeight : 0
-    );
-    window.parent.postMessage({ twhEmbed: true, height: h }, "*");
+
+  if (window.self === window.top) return;
+
+  var lastHeight = 0;
+  var timer = null;
+
+  function getContentHeight() {
+    var body = document.body;
+    if (!body) return 0;
+
+    /*
+     * Measure the bottom-most content inside the body rather than
+     * documentElement.scrollHeight. This avoids the iframe height itself
+     * becoming part of the measurement and creating a growth loop.
+     */
+    var maxBottom = 0;
+    var children = body.children;
+
+    for (var i = 0; i < children.length; i++) {
+      var el = children[i];
+
+      /* Ignore scripts/styles and fixed-position UI */
+      if (
+        el.tagName === "SCRIPT" ||
+        el.tagName === "STYLE" ||
+        el.tagName === "LINK"
+      ) continue;
+
+      var style = window.getComputedStyle(el);
+      if (
+        style.display === "none" ||
+        style.position === "fixed"
+      ) continue;
+
+      var rect = el.getBoundingClientRect();
+      var bottom = rect.bottom + window.pageYOffset;
+
+      if (bottom > maxBottom) {
+        maxBottom = bottom;
+      }
+    }
+
+    return Math.ceil(maxBottom);
   }
+
+  function sendHeight() {
+    clearTimeout(timer);
+
+    timer = setTimeout(function () {
+      var height = getContentHeight();
+
+      if (height > 0 && Math.abs(height - lastHeight) > 2) {
+        lastHeight = height;
+
+        window.parent.postMessage({
+          type: "twh-dashboard-height",
+          height: height
+        }, "*");
+      }
+    }, 50);
+  }
+
+  /* Initial measurements */
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+
+  /*
+   * Watch the BODY for actual dashboard-content changes:
+   * accordions opening/closing, recommendations expanding, etc.
+   */
   if ("ResizeObserver" in window) {
-    new ResizeObserver(postHeight).observe(document.documentElement);
-  } else {
-    window.addEventListener("resize", postHeight);
+    var resizeObserver = new ResizeObserver(sendHeight);
+    resizeObserver.observe(document.body);
   }
-  window.addEventListener("load", postHeight);
-  postHeight();
+
+  /*
+   * MutationObserver catches class/style changes used by dashboard
+   * accordions even where ResizeObserver timing is inconsistent.
+   */
+  if ("MutationObserver" in window) {
+    var mutationObserver = new MutationObserver(sendHeight);
+
+    mutationObserver.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["class", "style"]
+    });
+  }
+
+  sendHeight();
 })();
 </script>
 <script>
