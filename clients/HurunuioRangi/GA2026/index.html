@@ -2855,5 +2855,64 @@ body.v27 .v27-crop .v19-pm-dots { width: 114.286%; max-width: none; margin-left:
     document.addEventListener('click', soon, true);
   })();
 </script>
+
+<script>
+/* Dashboard index navigation fix: resolve actual section IDs and scroll the
+   containing page when this dashboard is embedded in a same-origin iframe. */
+(function () {
+  function navigateToSection(id, updateHistory) {
+    var target = document.getElementById(id);
+    if (!target) return false;
+    var ancestor = target.parentElement;
+    while (ancestor && ancestor !== document.body) {
+      if (ancestor.matches('.crf-body, .pukapuka-body, .v3-sec-body, .pers-collapse-body, .dim-body')) {
+        ancestor.classList.add('open');
+        var heading = ancestor.previousElementSibling;
+        if (heading) heading.classList.add('open');
+      }
+      ancestor = ancestor.parentElement;
+    }
+    if (updateHistory && window.location.hash !== '#' + id) {
+      try { history.pushState(null, '', '#' + encodeURIComponent(id)); } catch (_) {}
+    }
+    requestAnimationFrame(function () {
+      var offset = 12;
+      target.scrollIntoView({behavior: 'smooth', block: 'start'});
+      if (window.parent !== window) {
+        /* If the embedding page is same-origin, scroll it directly. */
+        try {
+          var frame = window.frameElement;
+          if (frame) {
+            var frameTop = frame.getBoundingClientRect().top + window.parent.scrollY;
+            var sectionTop = target.getBoundingClientRect().top + window.scrollY;
+            window.parent.scrollTo({top: Math.max(0, frameTop + sectionTop - offset), behavior: 'smooth'});
+          }
+        } catch (_) {
+          /* Cross-origin hosts must listen for the postMessage below. */
+        }
+        window.parent.postMessage({type: 'twh-dashboard-scroll', id: id,
+          top: Math.max(0, Math.round(target.getBoundingClientRect().top + window.scrollY - offset))}, '*');
+      }
+    });
+    return true;
+  }
+  document.addEventListener('click', function (event) {
+    var link = event.target.closest && event.target.closest('#d2-index a.d2-idx-row[href^="#"]');
+    if (!link) return;
+    var id;
+    try { id = decodeURIComponent(link.getAttribute('href').slice(1)); } catch (_) { return; }
+    if (!document.getElementById(id)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    navigateToSection(id, true);
+  }, true);
+  window.addEventListener('popstate', function () {
+    if (location.hash) navigateToSection(decodeURIComponent(location.hash.slice(1)), false);
+  });
+  window.addEventListener('load', function () {
+    if (location.hash) navigateToSection(decodeURIComponent(location.hash.slice(1)), false);
+  });
+})();
+</script>
 </body>
 </html>
