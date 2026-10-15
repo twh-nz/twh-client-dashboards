@@ -2693,5 +2693,65 @@ To carry out this Aromatawai (governance review), we reviewed ten board document
     document.addEventListener('click', soon, true);
   })();
 </script>
+<script>
+/* Te Ore Ore: reliable section-index navigation, including embedded dashboards. */
+(function () {
+  function revealAncestors(target) {
+    var node = target;
+    while (node && node !== document.body) {
+      if (node.matches && node.matches('.crf-body, .pukapuka-body, .v3-sec-body, .pers-collapse-body, .dim-body, .inline-docs-body')) {
+        node.classList.add('open');
+        var head = node.previousElementSibling;
+        if (head) head.classList.add('open');
+      }
+      node = node.parentElement;
+    }
+  }
+  function navigate(id) {
+    var target = document.getElementById(id);
+    if (!target) return;
+    revealAncestors(target);
+    if (location.hash !== '#' + id) {
+      try { history.replaceState(history.state, '', '#' + encodeURIComponent(id)); } catch (err) { /* URL may be restricted in an embed */ }
+    }
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        var rect = target.getBoundingClientRect();
+        var localY = Math.max(0, rect.top + window.pageYOffset - 16);
+        window.scrollTo({ top: localY, behavior: 'smooth' });
+        if (window.parent !== window) {
+          /* Directly scroll a same-origin host when the dashboard is an auto-height iframe. */
+          try {
+            var frame = window.frameElement;
+            if (frame && window.parent.document) {
+              var frameTop = frame.getBoundingClientRect().top + window.parent.pageYOffset;
+              window.parent.scrollTo({ top: Math.max(0, frameTop + localY), behavior: 'smooth' });
+            }
+          } catch (err) { /* Cross-origin hosts must handle the message below. */ }
+          window.parent.postMessage({ type: 'twh-dashboard-scroll', top: Math.round(localY), section: id }, '*');
+        }
+      });
+    });
+  }
+  document.addEventListener('click', function (event) {
+    var link = event.target && event.target.closest && event.target.closest('.d2-index a.d2-idx-row[href^="#"]');
+    if (!link) return;
+    var id;
+    try { id = decodeURIComponent(link.getAttribute('href').slice(1)); }
+    catch (err) { id = link.getAttribute('href').slice(1); }
+    if (!document.getElementById(id)) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    navigate(id);
+  }, true);
+  /* Direct links also reveal any collapsed destination. */
+  window.addEventListener('load', function () {
+    if (location.hash) {
+      var id = decodeURIComponent(location.hash.slice(1));
+      if (document.getElementById(id)) navigate(id);
+    }
+  });
+})();
+</script>
 </body>
 </html>
