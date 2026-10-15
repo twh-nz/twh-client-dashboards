@@ -2706,5 +2706,40 @@ body.v28 .v28-para + .v28-para { margin-top: 0.5rem; }
     document.addEventListener('click', soon, true);
   })();
 </script>
+<script>
+  /* Dashboard section index: reliably navigate to each full section, including
+     when embedded in an auto-height iframe. Keep existing section IDs intact. */
+  document.addEventListener('click', function (event) {
+    var link = event.target && event.target.closest ? event.target.closest('.d2-index a.d2-idx-row[href^="#"]') : null;
+    if (!link) return;
+    var id = decodeURIComponent(link.getAttribute('href').slice(1));
+    var target = document.getElementById(id);
+    if (!target) return;
+    event.preventDefault();
+    event.stopPropagation();
+    // Expand a destination if it sits inside a collapsed section.
+    var parent = target.parentElement;
+    while (parent && parent !== document.body) {
+      if (parent.matches('.crf-body, .pukapuka-body, .v3-sec-body, .pers-collapse-body, .dim-body')) {
+        parent.classList.add('open');
+        var header = parent.previousElementSibling;
+        if (header) header.classList.add('open');
+      }
+      parent = parent.parentElement;
+    }
+    // Preserve native anchor behaviour for direct links and browser history.
+    if (window.location.hash !== '#' + id) {
+      history.pushState(null, '', '#' + encodeURIComponent(id));
+    }
+    requestAnimationFrame(function () {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // An auto-height embedded dashboard needs its containing page to scroll.
+      if (window.parent !== window) {
+        var top = Math.max(0, Math.round(target.getBoundingClientRect().top + window.scrollY - 12));
+        window.parent.postMessage({ type: 'twh-dashboard-scroll', top: top }, '*');
+      }
+    });
+  }, true);
+</script>
 </body>
 </html>
