@@ -31,6 +31,40 @@
 <section class="closing" id="register"><div class="eyebrow" style="color:#e9bd5e">Nau mai, haere mai</div><h2>Come and help strengthen the future of our marae.</h2><p>Current trustees and whānau are all welcome. No previous governance experience is needed.</p><a class="btn btn-gold" href="https://forms.gle/dbKN7woaisqXvUqh7" rel="noopener" target="_blank">REGISTER FOR THE WĀNANGA ↗</a><p style="margin-top:17px;font-size:.88rem">Please register by <strong>5.00pm, Thursday 12 November 2026</strong></p></section></main>
 <footer class="footer"><div class="wrap"><div><strong>TE WHARE HUKAHUKA</strong><br/>Strengthening Our Marae · Governance Wānanga</div><div>Questions? Contact <strong>Chevourne Taukiri</strong><br/><a href="mailto:chevourne@twh.co.nz">chevourne@twh.co.nz</a> · <a href="tel:+64220160154">+64 22 016 0154</a></div><div><a href="https://www.twh.co.nz" rel="noopener" target="_blank">twh.co.nz ↗</a></div></div></footer><div class="mobile-cta"><a class="btn btn-gold" href="https://forms.gle/dbKN7woaisqXvUqh7" rel="noopener" target="_blank">REGISTER FOR THE WĀNANGA ↗</a></div>
 <script>
-/* Squarespace iframe auto-height: parent must listen for TWH_WANANGA_HEIGHT messages. */
-(function(){let previous=0;function report(){const height=Math.ceil(Math.max(document.body.scrollHeight,document.documentElement.scrollHeight));if(height!==previous){previous=height;window.parent.postMessage({type:'TWH_WANANGA_HEIGHT',height:height},'*');}}window.addEventListener('load',report);window.addEventListener('resize',report);document.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>setTimeout(report,80)));if('ResizeObserver'in window){new ResizeObserver(report).observe(document.body);}setTimeout(report,500);setTimeout(report,1800);})();
+/* Stable iframe sizing: measure content endpoint, not the viewport scrollHeight. */
+(function () {
+  const footer = document.querySelector('footer.footer');
+  let lastSent = 0;
+  let lastWidth = window.innerWidth;
+  let pending = false;
+  function measure() {
+    pending = false;
+    if (!footer || window.parent === window) return;
+    const footerBottom = footer.getBoundingClientRect().bottom + window.scrollY;
+    const bodyStyles = getComputedStyle(document.body);
+    const bottomMargin = parseFloat(bodyStyles.marginBottom) || 0;
+    const height = Math.ceil(footerBottom + bottomMargin);
+    if (Number.isFinite(height) && height > 400 && Math.abs(height - lastSent) >= 3) {
+      lastSent = height;
+      window.parent.postMessage({type: 'TWH_WANANGA_HEIGHT', height: height}, '*');
+    }
+  }
+  function schedule() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(measure);
+  }
+  window.addEventListener('load', schedule);
+  document.addEventListener('DOMContentLoaded', schedule);
+  document.querySelectorAll('details').forEach(d => d.addEventListener('toggle', schedule));
+  document.querySelectorAll('img').forEach(img => img.addEventListener('load', schedule));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  window.addEventListener('resize', function () {
+    // Width changes may reflow text. Height-only iframe changes must not feed back.
+    const width = window.innerWidth;
+    if (Math.abs(width - lastWidth) >= 2) { lastWidth = width; schedule(); }
+  });
+  setTimeout(schedule, 400);
+  setTimeout(schedule, 1500);
+})();
 </script></body></html>
